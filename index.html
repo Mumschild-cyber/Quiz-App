@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Love Quiz App</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <!-- Auth Pages -->
+    <div id="auth-container" class="auth-container">
+      <!-- Login Page -->
+      <div id="login-page" class="auth-page active">
+        <div class="auth-box">
+          <h1>Welcome to Love Quiz</h1>
+          <p class="auth-subtitle">Test your love knowledge!</p>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="login-username">Username</label>
+              <input
+                type="text"
+                id="login-username"
+                placeholder="Enter your username"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <button type="submit" class="auth-btn">Login</button>
+          </form>
+          <p class="auth-toggle">
+            Don't have an account?
+            <a href="#" id="to-signup-from-login">Sign up</a>
+          </p>
+          <p
+            class="auth-toggle"
+            style="
+              font-size: 0.85rem;
+              margin-top: 15px;
+              padding-top: 15px;
+              border-top: 1px solid rgba(255, 255, 255, 0.2);
+            "
+          >
+            <a href="#" id="to-admin-from-login">Admin Login</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Signup Page -->
+      <div id="signup-page" class="auth-page">
+        <div class="auth-box">
+          <h1>Create Account</h1>
+          <p class="auth-subtitle">Join the love quiz challenge!</p>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="signup-username">Username</label>
+              <input
+                type="text"
+                id="signup-username"
+                placeholder="Choose a username"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="signup-email">Email</label>
+              <input
+                type="email"
+                id="signup-email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="signup-password">Password</label>
+              <input
+                type="password"
+                id="signup-password"
+                placeholder="Create a password"
+                required
+              />
+            </div>
+            <button type="submit" class="auth-btn">Sign Up</button>
+          </form>
+          <p class="auth-toggle">
+            Already have an account?
+            <a href="#" id="to-login-from-signup">Login</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Admin Login Page (Secret) -->
+      <div id="admin-login-page" class="auth-page">
+        <div class="auth-box">
+          <h1>Admin Access</h1>
+          <p class="auth-subtitle">Administrative Panel</p>
+          <form id="admin-login-form">
+            <div class="form-group">
+              <label for="admin-username">Username</label>
+              <input
+                type="text"
+                id="admin-username"
+                placeholder="Admin username"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="admin-password">Password</label>
+              <input
+                type="password"
+                id="admin-password"
+                placeholder="Admin password"
+                required
+              />
+            </div>
+            <button type="submit" class="auth-btn">Login as Admin</button>
+          </form>
+          <p class="auth-toggle">
+            <a href="#" id="back-to-login">Back to Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard (Hidden by default) -->
+    <div id="admin-container" class="admin-container" style="display: none">
+      <div class="admin-header">
+        <h1>Admin Dashboard</h1>
+        <button id="admin-logout-btn" class="logout-btn">Logout</button>
+      </div>
+      <div class="admin-content">
+        <div class="users-section">
+          <h2>Registered Users</h2>
+          <div id="users-list" class="users-list"></div>
+        </div>
+        <div class="user-details-section">
+          <h2>User Details & Answers</h2>
+          <div id="user-details" class="user-details"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Container (Hidden by default) -->
+    <div id="quiz-container" class="quiz-container" style="display: none">
+      <div class="quiz-top-bar">
+        <div class="user-info" id="user-info"></div>
+        <button id="quiz-logout-btn" class="logout-btn">Logout</button>
+      </div>
+      <div class="quiz-header">
+        <div class="timer">Time Left: <span id="time">15</span>s</div>
+        <div class="streak">🔥 Streak: <span id="streak-count">0</span></div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <div class="question-number" id="question-number"></div>
+      <div class="question">Question will appear here</div>
+
+      <div class="options"></div>
+
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="result">
+        <div class="score-title">Results</div>
+        <div class="score-grid" aria-live="polite">
+          <div class="score-card">
+            <div class="score-label">Correct</div>
+            <div class="score-value">
+              <span id="score">0</span>
+              <span class="score-unit">/ <span id="total">0</span></span>
+            </div>
+          </div>
+
+          <div class="score-card">
+            <div class="score-label">Percentage</div>
+            <div class="score-value">
+              <span id="percent">0</span><span class="score-unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="score-summary" id="summary"></div>
+        <div class="review" id="review"></div>
+      </div>
+
+      <div class="controls">
+        <button class="previous-btn">Previous</button>
+        <button class="next-btn">Next</button>
+        <button class="restart-btn">Restart Quiz</button>
+      </div>
+    </div>
+  </body>
+</html>
