@@ -150,7 +150,8 @@ const ADMIN_CREDENTIALS = {
 
 let currentUser = null;
 let isAdminMode = false;
-let allUsers = JSON.parse(localStorage.getItem('quizUsers')) || [];
+let allUsers = [];
+// when running with backend, we will fetch server data
 let currentQuizType = null; // Track selected quiz type
 
 // ============= PAGE ELEMENTS =============
@@ -193,12 +194,28 @@ let lastAttemptedIndex = -1;
 let enableSpeech = true;
 
 // ============= LOGIN & SIGNUP HANDLERS =============
-document.addEventListener('DOMContentLoaded', () => {
+async function loadUsersFromServer() {
+    try {
+        const res = await fetch('/api/users');
+        if (res.ok) {
+            allUsers = await res.json();
+        } else {
+            console.warn('failed to load users', res.status);
+        }
+    } catch (err) {
+        console.error('error fetching users', err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     // Stop any ongoing speech on page load
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }
-    
+
+    // fetch existing users from server
+    await loadUsersFromServer();
+
     // Re-query form elements in case they weren't ready before
     const loginFormEl = document.getElementById('login-form');
     const signupFormEl = document.getElementById('signup-form');
@@ -209,8 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const toAdminLink = document.getElementById('to-admin-from-login');
 
     if (loginFormEl) {
-        loginFormEl.addEventListener('submit', (e) => {
+        loginFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
+            await loadUsersFromServer();
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
@@ -236,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (signupFormEl) {
-        signupFormEl.addEventListener('submit', (e) => {
+        signupFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('signup-username').value.trim();
             const email = document.getElementById('signup-email').value.trim();
@@ -249,20 +267,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const newUser = {
-                id: Date.now(),
                 username,
                 email,
                 password,
-                quizAttempts: [],
-                createdAt: new Date().toLocaleString()
+                quizAttempts: []
             };
 
-            allUsers.push(newUser);
-            localStorage.setItem('quizUsers', JSON.stringify(allUsers));
-
-            alert('Account created successfully! You can now login.');
-            signupFormEl.reset();
-            switchPage(document.getElementById('login-page'));
+            try {
+                const res = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newUser)
+                });
+                const created = await res.json();
+                allUsers.push(created);
+                alert('Account created successfully! You can now login.');
+                signupFormEl.reset();
+                switchPage(document.getElementById('login-page'));
+            } catch (err) {
+                console.error('signup failed', err);
+                alert('Failed to create account, try again later');
+            }
         });
     }
 
@@ -402,11 +427,12 @@ function switchPage(targetPage) {
 }
 
 // ============= ADMIN DASHBOARD =============
-function showAdminDashboard() {
+async function showAdminDashboard() {
     authContainer.style.display = 'none';
     quizContainer.style.display = 'none';
     adminContainer.style.display = 'block';
     
+    await loadUsersFromServer(); // make sure we have fresh data
     renderAdminDashboard();
 }
 
@@ -844,7 +870,7 @@ function endQuiz() {
     saveQuizAttempt(percent);
 }
 
-function saveQuizAttempt(percent) {
+async function saveQuizAttempt(percent) {
     if (currentUser) {
         const attempt = {
             score: score,
@@ -860,7 +886,17 @@ function saveQuizAttempt(percent) {
 
         currentUser.quizAttempts.push(attempt);
         allUsers = allUsers.map(u => u.id === currentUser.id ? currentUser : u);
-        localStorage.setItem('quizUsers', JSON.stringify(allUsers));
+
+        // update user on server
+        try {
+            await fetch(`/api/users/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentUser)
+            });
+        } catch (err) {
+            console.error('Failed to save attempt to server', err);
+        }
     }
 }
 
