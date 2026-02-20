@@ -194,6 +194,11 @@ let enableSpeech = true;
 
 // ============= LOGIN & SIGNUP HANDLERS =============
 document.addEventListener('DOMContentLoaded', () => {
+    // Stop any ongoing speech on page load
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+    
     // Re-query form elements in case they weren't ready before
     const loginFormEl = document.getElementById('login-form');
     const signupFormEl = document.getElementById('signup-form');
@@ -356,6 +361,22 @@ document.addEventListener('DOMContentLoaded', () => {
         speechToggle.addEventListener('change', (e) => {
             enableSpeech = e.target.checked;
             localStorage.setItem('speechEnabled', enableSpeech);
+            
+            if ('speechSynthesis' in window) {
+                // Always cancel current speech first
+                window.speechSynthesis.cancel();
+                
+                // If toggled ON, immediately speak the current question
+                if (enableSpeech && currentUser && quizData.length > 0 && currentQuestion < quizData.length) {
+                    const q = quizData[currentQuestion];
+                    const opts = q.Options || q.options || [];
+                    if (opts.length) {
+                        speak(`${q.question}. Options: ${opts.join(', ')}.`);
+                    } else {
+                        speak(q.question);
+                    }
+                }
+            }
         });
     }
 
@@ -765,6 +786,11 @@ function endQuiz() {
     else if (percent >= 75) label = "Excellent!";
     else if (percent >= 50) label = "Good start!";
 
+    // Trigger celebration if 95% or higher
+    if (percent >= 95) {
+        triggerCelebration(percent);
+    }
+
     if (summaryEl) summaryEl.textContent = `${label} You scored ${score}/${total} · ${wrong} wrong · ${unanswered} unanswered`;
 
     if (reviewEl) {
@@ -1087,3 +1113,138 @@ function goToNext() {
     }
     loadQuestion();
 }
+
+// ============= CELEBRATION FUNCTION =============
+function triggerCelebration(percent) {
+    const modal = document.getElementById('celebration-modal');
+    if (!modal) return;
+
+    const quizType = currentQuizType ? allQuizzes[currentQuizType].name : 'Quiz';
+    const celebrationText = document.getElementById('celebration-text');
+    const celebrationTopic = document.getElementById('celebration-topic');
+
+    if (celebrationText) {
+        celebrationText.textContent = `You are a GURU! 🌟`;
+    }
+    if (celebrationTopic) {
+        celebrationTopic.textContent = `${quizType} completed with ${percent}% accuracy`;
+    }
+
+    // Show modal
+    modal.style.display = 'flex';
+
+    // Generate fireworks
+    generateFireworks();
+
+    // Play celebration sound
+    playFireworkSound();
+
+    // Auto-hide after 4 seconds
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 4000);
+}
+
+function generateFireworks() {
+    const container = document.getElementById('fireworks-container');
+    if (!container) return;
+
+    // Clear previous fireworks
+    container.innerHTML = '';
+
+    // Create multiple bursts
+    for (let burst = 0; burst < 5; burst++) {
+        setTimeout(() => {
+            createFireworkBurst(container);
+        }, burst * 300);
+    }
+}
+
+function createFireworkBurst(container) {
+    const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#ff6bff', '#00ffff', '#ffaa00'];
+    const particleCount = 50;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'firework-particle';
+
+        // Random color
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.backgroundColor = color;
+        particle.style.boxShadow = `0 0 10px ${color}`;
+
+        // Random position from center
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = 5 + Math.random() * 8;
+        const tx = Math.cos(angle) * velocity * 20;
+        const ty = Math.sin(angle) * velocity * 20;
+
+        // Position at center
+        particle.style.left = '50%';
+        particle.style.top = '50%';
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+
+        // Random size
+        const size = 5 + Math.random() * 8;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        // Random animation delay
+        particle.style.animationDelay = (Math.random() * 0.3) + 's';
+
+        container.appendChild(particle);
+    }
+}
+
+function playFireworkSound() {
+    // Create audio context for sound
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioContext.currentTime;
+
+        // Create multiple sounds for firework effect
+        for (let i = 0; i < 3; i++) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            // Varying frequencies for cool sound
+            osc.frequency.setValueAtTime(800 - i * 200, now);
+            osc.frequency.exponentialRampToValueAtTime(200 - i * 100, now + 0.3);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            osc.start(now + i * 0.1);
+            osc.stop(now + 0.3 + i * 0.1);
+        }
+    } catch (e) {
+        // Audio context not available
+        console.log('Audio not available');
+    }
+}
+
+// Function to handle new user registration
+function registerNewUser(username) {
+    const registrationDate = new Date();
+    const newUser = { username, registrationDate };
+
+    // Assuming we have a users array to store registered users
+    users.push(newUser);
+
+    // Notify admin about the new user
+    notifyAdmin(newUser);
+}
+
+// Function to notify admin about new user registration
+function notifyAdmin(user) {
+    console.log(`New user registered: ${user.username} on ${user.registrationDate}`);
+    // Additional logic to send an email or notification can be added here
+}
+
+// Example users array to store registered users
+const users = [];
+

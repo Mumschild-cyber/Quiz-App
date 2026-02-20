@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Love Quiz App</title>
+    <title>Intellibliss - Quiz Mastery</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
   </head>
@@ -13,8 +13,10 @@
       <!-- Login Page -->
       <div id="login-page" class="auth-page active">
         <div class="auth-box">
-          <h1>Welcome to Love Quiz</h1>
-          <p class="auth-subtitle">Test your love knowledge!</p>
+          <h1>Welcome to Intellibliss</h1>
+          <p class="auth-subtitle">
+            Test your knowledge across multiple topics!
+          </p>
           <form id="login-form">
             <div class="form-group">
               <label for="login-username">Username</label>
@@ -58,7 +60,7 @@
       <div id="signup-page" class="auth-page">
         <div class="auth-box">
           <h1>Create Account</h1>
-          <p class="auth-subtitle">Join the love quiz challenge!</p>
+          <p class="auth-subtitle">Join the Intellibliss challenge!</p>
           <form id="signup-form">
             <div class="form-group">
               <label for="signup-username">Username</label>
@@ -175,6 +177,18 @@
         <div class="settings-footer">
           <button id="settings-logout-btn" class="logout-btn">Logout</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Celebration Modal (Hidden by default) -->
+    <div id="celebration-modal" class="celebration-modal" style="display: none">
+      <div class="celebration-content">
+        <div class="celebration-message">
+          <h1>🎉 HURRAY! 🎉</h1>
+          <p id="celebration-text">You are a guru!</p>
+          <p class="celebration-subtitle" id="celebration-topic"></p>
+        </div>
+        <div class="fireworks-container" id="fireworks-container"></div>
       </div>
     </div>
 
