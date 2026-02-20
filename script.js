@@ -1,22 +1,146 @@
-const quizData = [
-    {question: "What is the most important ingredient in a romantic relationship?", Options: ["Trust", "Money", "Physical attraction", "Social status"], answer: "Trust"},
-    {question: "How often should you say 'I love you' to your partner?", Options: ["Once a day", "Once a week", "Whenever you feel it", "Only on special occasions"], answer: "Whenever you feel it"},
-    {question: "What is considered the best first date activity?", Options: ["Dinner and conversation", "Extreme sports", "Shopping", "Video games"], answer: "Dinner and conversation"},
-    {question: "How many years is considered a 'healthy' relationship milestone?", Options: ["3 months", "1 year", "5 years", "All above are meaningful"], answer: "All above are meaningful"},
-    {question: "What should you do if your partner forgets an important date?", Options: ["Leave them immediately", "Communicate how it made you feel", "Ignore it", "Make them feel guilty forever"], answer: "Communicate how it made you feel"},
-    {question: "Which is more important in love: passion or commitment?", Options: ["Passion", "Commitment", "Both equally", "Neither matters"], answer: "Both equally"},
-    {question: "What is the best way to apologize to someone you love?", Options: ["Text message", "Through a friend", "Face-to-face with sincerity", "Ignore the issue"], answer: "Face-to-face with sincerity"},
-    {question: "How should you handle conflicts with your partner?", Options: ["Avoid talking about it", "Listen and communicate openly", "Always agree with them", "Bring up past arguments"], answer: "Listen and communicate openly"},
-    {question: "What does love at first sight really mean?", Options: ["Instant attraction", "Growing affection over time", "A movie myth", "Love is always immediate"], answer: "Instant attraction"},
-    {question: "What is the best gift to express romantic love?", Options: ["Something expensive", "Something thoughtful and personal", "Flowers every day", "Material items only"], answer: "Something thoughtful and personal"},
-    {question: "How important is maintaining individual interests in a relationship?", Options: ["Not important", "Very important", "Only for long-term relationships", "Only for married couples"], answer: "Very important"},
-    {question: "What should you do if you catch feelings for someone?", Options: ["Never tell them", "Tell them directly when ready", "Wait forever hoping", "Tell everyone except them"], answer: "Tell them directly when ready"},
-    {question: "Which is a sign of true love?", Options: ["Always agreeing", "Supporting each other's dreams", "Never arguing", "Being jealous"], answer: "Supporting each other's dreams"},
-    {question: "How long does it take to truly fall in love?", Options: ["A few days", "It varies for everyone", "Exactly 6 months", "One year always"], answer: "It varies for everyone"},
-    {question: "What makes a relationship last long?", Options: ["Physical looks", "Money and status", "Effort, trust, and communication", "Luck alone"], answer: "Effort, trust, and communication"},
-    {question: "Is it okay to have doubts in a relationship?", Options: ["No, never", "Yes, it's normal and healthy", "Only at the beginning", "Only if you're not in love"], answer: "Yes, it's normal and healthy"},
-    {question: "What is the most romantic gesture you can do?", Options: ["Grand public display", "Listening and understanding them", "Expensive gifts", "Constant texting"], answer: "Listening and understanding them"},
-];
+// ============= QUIZ SYSTEM DATA =============
+const allQuizzes = {
+    love: {
+        name: "Love Questions",
+        icon: "💕",
+        questions: [
+            {question: "What is the most important ingredient in a romantic relationship?", Options: ["Trust", "Money", "Physical attraction", "Social status"], answer: "Trust"},
+            {question: "How often should you say 'I love you' to your partner?", Options: ["Once a day", "Once a week", "Whenever you feel it", "Only on special occasions"], answer: "Whenever you feel it"},
+            {question: "What is considered the best first date activity?", Options: ["Dinner and conversation", "Extreme sports", "Shopping", "Video games"], answer: "Dinner and conversation"},
+            {question: "How many years is considered a 'healthy' relationship milestone?", Options: ["3 months", "1 year", "5 years", "All above are meaningful"], answer: "All above are meaningful"},
+            {question: "What should you do if your partner forgets an important date?", Options: ["Leave them immediately", "Communicate how it made you feel", "Ignore it", "Make them feel guilty forever"], answer: "Communicate how it made you feel"},
+            {question: "Which is more important in love: passion or commitment?", Options: ["Passion", "Commitment", "Both equally", "Neither matters"], answer: "Both equally"},
+            {question: "What is the best way to apologize to someone you love?", Options: ["Text message", "Through a friend", "Face-to-face with sincerity", "Ignore the issue"], answer: "Face-to-face with sincerity"},
+            {question: "How should you handle conflicts with your partner?", Options: ["Avoid talking about it", "Listen and communicate openly", "Always agree with them", "Bring up past arguments"], answer: "Listen and communicate openly"},
+            {question: "What does love at first sight really mean?", Options: ["Instant attraction", "Growing affection over time", "A movie myth", "Love is always immediate"], answer: "Instant attraction"},
+            {question: "What is the best gift to express romantic love?", Options: ["Something expensive", "Something thoughtful and personal", "Flowers every day", "Material items only"], answer: "Something thoughtful and personal"},
+            {question: "How important is maintaining individual interests in a relationship?", Options: ["Not important", "Very important", "Only for long-term relationships", "Only for married couples"], answer: "Very important"},
+            {question: "What should you do if you catch feelings for someone?", Options: ["Never tell them", "Tell them directly when ready", "Wait forever hoping", "Tell everyone except them"], answer: "Tell them directly when ready"},
+            {question: "Which is a sign of true love?", Options: ["Always agreeing", "Supporting each other's dreams", "Never arguing", "Being jealous"], answer: "Supporting each other's dreams"},
+            {question: "How long does it take to truly fall in love?", Options: ["A few days", "It varies for everyone", "Exactly 6 months", "One year always"], answer: "It varies for everyone"},
+            {question: "What makes a relationship last long?", Options: ["Physical looks", "Money and status", "Effort, trust, and communication", "Luck alone"], answer: "Effort, trust, and communication"},
+            {question: "Is it okay to have doubts in a relationship?", Options: ["No, never", "Yes, it's normal and healthy", "Only at the beginning", "Only if you're not in love"], answer: "Yes, it's normal and healthy"},
+            {question: "What is the most romantic gesture you can do?", Options: ["Grand public display", "Listening and understanding them", "Expensive gifts", "Constant texting"], answer: "Listening and understanding them"},
+        ]
+    },
+    football: {
+        name: "Football Questions",
+        icon: "⚽",
+        questions: [
+            {question: "How many players does each team have on the pitch in a standard football match?", Options: ["9", "10", "11", "12"], answer: "11"},
+            {question: "How long is a standard football match (excluding stoppage time)?", Options: ["60 minutes", "80 minutes", "90 minutes", "100 minutes"], answer: "90 minutes"},
+            {question: "How many points is a win worth in most football leagues?", Options: ["1", "2", "3", "5"], answer: "3"},
+            {question: "What is the restart called after a goal is scored?", Options: ["Drop ball", "Kick-off", "Throw-in", "Goal-kick"], answer: "Kick-off"},
+            {question: "Which card means a player is sent off?", Options: ["Yellow", "Red", "Green", "Blue"], answer: "Red"},
+            {question: "What does VAR stand for in football?", Options: ["Video Assistant Referee", "Verified Action Replay", "Virtual Assistant Review", "Video Attack Ruling"], answer: "Video Assistant Referee"},
+            {question: "Which country won the first FIFA World Cup in 1930?", Options: ["Brazil", "Uruguay", "Italy", "Argentina"], answer: "Uruguay"},
+            {question: "From which restart can a player NOT be offside?", Options: ["Throw-in", "Free Kick", "Open play", "Penalty kick"], answer: "Throw-in"},
+            {question: "How far is the penalty spot from the goal line?", Options: ["6 yards", "12 yards", "18 yards", "22 yards"], answer: "12 yards"},
+            {question: "From which type of free kick can you score directly without another touch?", Options: ["Direct free kick", "Indirect free kick", "Both", "Neither"], answer: "Direct free kick"},
+            {question: "What is the area in front of the goal called?", Options: ["Penalty area", "Goal area", "D-box", "All of the above"], answer: "All of the above"},
+            {question: "How many substitutes can a team typically make in a match?", Options: ["1", "2", "3", "5"], answer: "3"},
+            {question: "What does 'offside' mean?", Options: ["Being in front of the ball", "Being ahead of defenders", "Being ahead of the second-to-last defender", "Being behind the goal line"], answer: "Being ahead of the second-to-last defender"},
+            {question: "Which player wears a different colored jersey?", Options: ["Defender", "Midfielder", "Goalkeeper", "Forward"], answer: "Goalkeeper"},
+            {question: "How many times can a goalkeeper touch the ball with hands in a match?", Options: ["Unlimited", "Once per play", "Only on crosses", "Never"], answer: "Unlimited"},
+            {question: "What is the diameter of a football?", Options: ["20-22 cm", "25-28 cm", "30-35 cm", "40-45 cm"], answer: "25-28 cm"},
+            {question: "Who won the most FIFA World Cup titles?", Options: ["Germany", "Argentina", "Brazil", "France"], answer: "Brazil"},
+        ]
+    },
+    nigeria: {
+        name: "Nigeria Economy",
+        icon: "🇳🇬",
+        questions: [
+            {question: "What is Nigeria's largest source of revenue?", Options: ["Agriculture", "Oil and gas", "Telecommunications", "Manufacturing"], answer: "Oil and gas"},
+            {question: "What is Nigeria's official currency?", Options: ["Pound", "Dollar", "Naira", "Euro"], answer: "Naira"},
+            {question: "Which Nigerian sector employs the most people?", Options: ["Oil", "Agriculture", "Retail", "Technology"], answer: "Agriculture"},
+            {question: "What percentage of Nigeria's GDP does oil contribute?", Options: ["10-20%", "30-40%", "50-60%", "70-80%"], answer: "30-40%"},
+            {question: "Which is Nigeria's largest commercial bank?", Options: ["Access Bank", "GTBank", "Zenith Bank", "First Bank"], answer: "First Bank"},
+            {question: "What is the minimum wage in Nigeria (2024)?", Options: ["₦18,000", "₦30,000", "₦70,000", "₦100,000"], answer: "₦70,000"},
+            {question: "Nigeria's stock exchange is located in which city?", Options: ["Lagos", "Abuja", "Kano", "Port Harcourt"], answer: "Lagos"},
+            {question: "What is Nigeria's major export product?", Options: ["Cocoa", "Coffee", "Crude oil", "Cotton"], answer: "Crude oil"},
+            {question: "How many states does Nigeria have?", Options: ["30", "33", "36", "37"], answer: "36"},
+            {question: "What is Nigeria's inflation rate approximately (2024)?", Options: ["10%", "20%", "30%", "40%"], answer: "30%"},
+            {question: "Which Nigerian sector is growing fastest currently?", Options: ["Oil", "Technology", "Agriculture", "Mining"], answer: "Technology"},
+            {question: "What is Nigeria's GDP ranking in Africa?", Options: ["1st", "2nd", "3rd", "5th"], answer: "1st"},
+            {question: "Nigeria's central bank is called?", Options: ["CBN", "NBD", "NGB", "NBC"], answer: "CBN"},
+            {question: "What is the primary agricultural product of Nigeria?", Options: ["Rice", "Cassava", "Maize", "All of the above"], answer: "All of the above"},
+            {question: "How many major oil fields does Nigeria have?", Options: ["5", "15", "25", "35"], answer: "15"},
+            {question: "Nigeria's debt-to-GDP ratio is approximately?", Options: ["20%", "35%", "50%", "65%"], answer: "35%"},
+            {question: "Which Nigerian company is listed on international stock exchanges?", Options: ["Dangote Group", "BUA Group", "Nestlé Nigeria", "All of the above"], answer: "All of the above"},
+        ]
+    },
+    education: {
+        name: "Importance of Education",
+        icon: "📚",
+        questions: [
+            {question: "What is the primary purpose of education?", Options: ["Earning money", "Personal development and societal progress", "Social status", "Entertainment"], answer: "Personal development and societal progress"},
+            {question: "Education improves which of the following?", Options: ["Health outcomes", "Earning potential", "Critical thinking", "All of the above"], answer: "All of the above"},
+            {question: "What percentage of global poverty reduction is attributed to education?", Options: ["10%", "25%", "37%", "50%"], answer: "37%"},
+            {question: "Quality education helps reduce which social problem?", Options: ["Crime", "Unemployment", "Inequality", "All of the above"], answer: "All of the above"},
+            {question: "Education enables individuals to make?", Options: ["Random decisions", "Informed decisions", "Emotional decisions", "Quick decisions"], answer: "Informed decisions"},
+            {question: "Which skill is developed through education?", Options: ["Problem-solving", "Communication", "Leadership", "All of the above"], answer: "All of the above"},
+            {question: "What is the global literacy rate approximately?", Options: ["60%", "70%", "80%", "90%"], answer: "80%"},
+            {question: "Education contributes to sustainable development by?", Options: ["Reducing poverty", "Creating jobs", "Promoting peace", "All of the above"], answer: "All of the above"},
+            {question: "Which group benefits most from quality education?", Options: ["Rich people", "Poor communities", "Young people", "Educated people"], answer: "Poor communities"},
+            {question: "Education is a right recognized by which organization?", Options: ["WHO", "UNESCO", "UN", "World Bank"], answer: "UN"},
+            {question: "What does SDG 4 focus on?", Options: ["Health", "Quality Education", "Clean Water", "Poverty"], answer: "Quality Education"},
+            {question: "How does education affect economic growth?", Options: ["Negatively", "No impact", "Positively", "Uncertain"], answer: "Positively"},
+            {question: "Education reduces gender inequality by?", Options: ["Empowering girls", "Creating opportunities", "Increasing awareness", "All of the above"], answer: "All of the above"},
+            {question: "Which country has the highest literacy rate?", Options: ["India", "Japan", "Finland", "USA"], answer: "Finland"},
+            {question: "Education strengthens which institutions?", Options: ["Governments", "Businesses", "Communities", "All of the above"], answer: "All of the above"},
+            {question: "What is the estimated return on education investment?", Options: ["5x", "10x", "15x", "20x"], answer: "10x"},
+            {question: "Education helps individuals achieve which of these?", Options: ["Career goals", "Personal fulfillment", "Social connections", "All of the above"], answer: "All of the above"},
+        ]
+    },
+    ai: {
+        name: "AI vs Human Efficiency",
+        icon: "🤖",
+        questions: [
+            {question: "In which area is AI faster than humans?", Options: ["Decision-making", "Data processing", "Physical tasks", "Creative thinking"], answer: "Data processing"},
+            {question: "What is a major advantage of human intelligence?", Options: ["Speed", "Memory", "Creativity and adaptability", "Consistency"], answer: "Creativity and adaptability"},
+            {question: "Can AI replace human jobs completely?", Options: ["Yes, always", "No, never", "Some jobs, but humans adapt", "Uncertain"], answer: "Some jobs, but humans adapt"},
+            {question: "Which task is AI more efficient at?", Options: ["Emotional support", "Complex analysis of patterns", "Artistic creation", "Strategic planning"], answer: "Complex analysis of patterns"},
+            {question: "What is a limitation of current AI systems?", Options: ["Speed", "Lack of common sense", "Accuracy", "Memory"], answer: "Lack of common sense"},
+            {question: "Humans excel in which area compared to AI?", Options: ["Calculations", "Communication", "Pattern recognition", "Data storage"], answer: "Communication"},
+            {question: "What percentage of jobs will be automated in next 20 years?", Options: ["10%", "25%", "50%", "75%"], answer: "25%"},
+            {question: "AI's efficiency is limited by?", Options: ["Power supply", "Internet", "Training data quality", "Programming"], answer: "Training data quality"},
+            {question: "Which field has AI achieved highest efficiency?", Options: ["Healthcare", "Transportation", "Image recognition", "All equal"], answer: "Image recognition"},
+            {question: "Can humans work better than AI in healthcare?", Options: ["Yes, always", "No, AI is better", "Both have strengths", "Depends on task"], answer: "Both have strengths"},
+            {question: "What is AI's main advantage in business?", Options: ["Cost reduction", "Productivity", "Consistency", "All of the above"], answer: "All of the above"},
+            {question: "Humans are better at which type of problem-solving?", Options: ["Linear problems", "Novel situations", "Repetitive tasks", "Mathematical calculations"], answer: "Novel situations"},
+            {question: "AI requires what for learning?", Options: ["Consciousness", "Massive data", "Motivation", "Sleep"], answer: "Massive data"},
+            {question: "Which profession is least likely to be automated?", Options: ["Accountant", "Therapist", "Clerk", "Analyst"], answer: "Therapist"},
+            {question: "What human skill is hardest to replicate in AI?", Options: ["Logic", "Intuition", "Calculation", "Memory"], answer: "Intuition"},
+            {question: "AI systems can work how many hours without break?", Options: ["8 hours", "12 hours", "Indefinitely", "Limited by power"], answer: "Indefinitely"},
+            {question: "What is the future of AI and human collaboration?", Options: ["AI dominates", "Humans dominate", "Complementary partnership", "Separation"], answer: "Complementary partnership"},
+        ]
+    },
+    sample: {
+        name: "Sample Question Topic",
+        icon: "⭐",
+        questions: [
+            {question: "What is 2 + 2?", Options: ["3", "4", "5", "6"], answer: "4"},
+            {question: "Which planet is known as the Red Planet?", Options: ["Venus", "Jupiter", "Mars", "Saturn"], answer: "Mars"},
+            {question: "What is the capital of France?", Options: ["London", "Berlin", "Paris", "Madrid"], answer: "Paris"},
+            {question: "Who wrote Romeo and Juliet?", Options: ["Dickens", "Shakespeare", "Austen", "Marlowe"], answer: "Shakespeare"},
+            {question: "What is the largest ocean?", Options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: "Pacific"},
+            {question: "Which element has symbol 'Au'?", Options: ["Silver", "Aluminum", "Gold", "Argon"], answer: "Gold"},
+            {question: "What is the smallest prime number?", Options: ["0", "1", "2", "3"], answer: "2"},
+            {question: "How many continents are there?", Options: ["5", "6", "7", "8"], answer: "7"},
+            {question: "What is the speed of light?", Options: ["300,000 km/s", "150,000 km/s", "500,000 km/s", "100,000 km/s"], answer: "300,000 km/s"},
+            {question: "Which is the tallest mountain?", Options: ["K2", "Everest", "Kilimanjaro", "Denali"], answer: "Everest"},
+            {question: "What is the study of stars called?", Options: ["Geology", "Astronomy", "Botany", "Zoology"], answer: "Astronomy"},
+            {question: "How many sides does a hexagon have?", Options: ["4", "5", "6", "7"], answer: "6"},
+            {question: "Which country is largest by area?", Options: ["Canada", "Russia", "China", "USA"], answer: "Russia"},
+            {question: "What is 10 x 5?", Options: ["40", "50", "60", "70"], answer: "50"},
+            {question: "Which metal is liquid at room temperature?", Options: ["Gold", "Silver", "Mercury", "Copper"], answer: "Mercury"},
+            {question: "What is the deepest ocean trench?", Options: ["Mariana Trench", "Tonga Trench", "Philippine Trench", "Kuril-Kamchatka"], answer: "Mariana Trench"},
+            {question: "How many legs does a spider have?", Options: ["6", "8", "10", "12"], answer: "8"},
+        ]
+    }
+};
+
+let quizData = []; // Will be populated when quiz type is selected
 
 // ============= AUTH SYSTEM =============
 const ADMIN_CREDENTIALS = {
@@ -27,6 +151,7 @@ const ADMIN_CREDENTIALS = {
 let currentUser = null;
 let isAdminMode = false;
 let allUsers = JSON.parse(localStorage.getItem('quizUsers')) || [];
+let currentQuizType = null; // Track selected quiz type
 
 // ============= PAGE ELEMENTS =============
 const authContainer = document.getElementById('auth-container');
@@ -42,6 +167,13 @@ let adminLoginForm = null;
 let toSignupFromLogin = null;
 let toLoginFromSignup = null;
 let backToLogin = null;
+
+// Settings elements
+let settingsModal = null;
+let settingsBtn = null;
+let settingsCloseBtn = null;
+let speechToggle = null;
+let settingsLogoutBtn = null;
 
 // Quiz elements (initialized after page load)
 let timerEl, questionEl, optionsEl, feedbackEl, resultEl, scoreEl, totalEl, percentEl;
@@ -171,6 +303,72 @@ document.addEventListener('DOMContentLoaded', () => {
         toAdminLink.addEventListener('click', (e) => {
             e.preventDefault();
             switchPage(document.getElementById('admin-login-page'));
+        });
+    }
+
+    // Settings modal handlers
+    settingsModal = document.getElementById('settings-modal');
+    settingsBtn = document.getElementById('settings-btn');
+    settingsCloseBtn = document.getElementById('settings-close-btn');
+    speechToggle = document.getElementById('speech-toggle');
+    settingsLogoutBtn = document.getElementById('settings-logout-btn');
+
+    const dashboardBtn = document.getElementById('dashboard-btn');
+    if (dashboardBtn) {
+        dashboardBtn.addEventListener('click', () => {
+            goToDashboard();
+        });
+    }
+
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            if (settingsModal) {
+                settingsModal.style.display = 'flex';
+            }
+        });
+    }
+
+    if (settingsCloseBtn) {
+        settingsCloseBtn.addEventListener('click', () => {
+            if (settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+        });
+    }
+
+    // Close modal when clicking outside
+    if (settingsModal) {
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (speechToggle) {
+        // Load saved speech preference
+        const savedSpeechPref = localStorage.getItem('speechEnabled');
+        if (savedSpeechPref !== null) {
+            enableSpeech = savedSpeechPref === 'true';
+            speechToggle.checked = enableSpeech;
+        }
+
+        speechToggle.addEventListener('change', (e) => {
+            enableSpeech = e.target.checked;
+            localStorage.setItem('speechEnabled', enableSpeech);
+        });
+    }
+
+    if (settingsLogoutBtn) {
+        settingsLogoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            enableSpeech = true; // Reset to default
+            quizContainer.style.display = 'none';
+            authContainer.style.display = 'block';
+            switchPage(document.getElementById('login-page'));
+            clearInterval(timerInterval);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (settingsModal) settingsModal.style.display = 'none';
         });
     }
 });
@@ -641,14 +839,133 @@ function saveQuizAttempt(percent) {
 }
 
 function startQuiz() {
-    initializeQuizElements();
-    
+    // Show dashboard instead of quiz directly
     authContainer.style.display = 'none';
     adminContainer.style.display = 'none';
+    const dashboardContainer = document.getElementById('dashboard-container');
+    if (dashboardContainer) {
+        dashboardContainer.style.display = 'flex';
+    }
+    quizContainer.style.display = 'none';
+
+    // Update dashboard welcome message
+    const welcomeMsg = document.getElementById('dashboard-welcome');
+    if (welcomeMsg) {
+        welcomeMsg.textContent = `Welcome, ${currentUser.username}!`;
+    }
+
+    // Render quiz topics
+    renderDashboard();
+}
+
+function renderDashboard() {
+    const quizTopicsList = document.getElementById('quiz-topics-list');
+    if (!quizTopicsList) return;
+
+    quizTopicsList.innerHTML = '';
+
+    // Loop through all quizzes and create topic cards
+    Object.entries(allQuizzes).forEach(([key, quiz]) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-topic-card';
+        card.setAttribute('data-quiz-type', key);
+
+        card.innerHTML = `
+            <div class="topic-info">
+                <div class="topic-icon">${quiz.icon}</div>
+                <div class="topic-details">
+                    <div class="topic-name">${quiz.name}</div>
+                    <div class="topic-questions-count">${quiz.questions.length} questions</div>
+                </div>
+            </div>
+            <div class="topic-controls">
+                <label class="topic-toggle">
+                    <input type="checkbox" class="quiz-toggle-checkbox" />
+                    <span class="topic-toggle-slider"></span>
+                </label>
+                <button class="confirm-btn" disabled>Start</button>
+            </div>
+        `;
+
+        // Add toggle event listener
+        const checkbox = card.querySelector('.quiz-toggle-checkbox');
+        checkbox.addEventListener('change', (e) => {
+            handleQuizToggle(e, key, card);
+        });
+
+        // Add confirm button event listener
+        const confirmBtn = card.querySelector('.confirm-btn');
+        confirmBtn.addEventListener('click', (e) => {
+            handleConfirmQuiz(e, key);
+        });
+
+        quizTopicsList.appendChild(card);
+    });
+}
+
+function handleQuizToggle(event, quizType, cardElement) {
+    const isChecked = event.target.checked;
+
+    // Uncheck all other cards
+    document.querySelectorAll('.quiz-topic-card').forEach(card => {
+        if (card !== cardElement) {
+            const checkbox = card.querySelector('.quiz-toggle-checkbox');
+            checkbox.checked = false;
+            card.classList.remove('selected');
+        }
+    });
+
+    // Update current card
+    if (isChecked) {
+        cardElement.classList.add('selected');
+        const confirmBtn = cardElement.querySelector('.confirm-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+        }
+    } else {
+        cardElement.classList.remove('selected');
+        const confirmBtn = cardElement.querySelector('.confirm-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+        }
+    }
+
+    // Update current quiz type
+    currentQuizType = isChecked ? quizType : null;
+}
+
+function handleConfirmQuiz(event, quizType) {
+    event.preventDefault();
+
+    // Set quizData to selected quiz type
+    quizData = allQuizzes[quizType].questions;
+    currentQuizType = quizType;
+
+    // Initialize quiz and start
+    initializeQuizElements();
+    
+    const dashboardContainer = document.getElementById('dashboard-container');
+    if (dashboardContainer) {
+        dashboardContainer.style.display = 'none';
+    }
     quizContainer.style.display = 'block';
 
     if (userInfoEl) {
-        userInfoEl.textContent = `Welcome, ${currentUser.username}!`;
+        userInfoEl.textContent = `${allQuizzes[quizType].name} - ${currentUser.username}`;
+    }
+
+    // Clear previous results
+    const resultEl = quizContainer.querySelector('.result');
+    if (resultEl) {
+        resultEl.style.display = 'none';
+    }
+    const summaryEl = quizContainer.querySelector('#summary');
+    if (summaryEl) {
+        summaryEl.textContent = '';
+    }
+    const reviewEl = quizContainer.querySelector('#review');
+    if (reviewEl) {
+        reviewEl.innerHTML = '';
     }
 
     // Reset quiz state
@@ -663,6 +980,10 @@ function startQuiz() {
     lastAttemptedIndex = -1;
 
     // Add event listeners to buttons
+    const restartBtn = quizContainer.querySelector('.restart-btn');
+    const prevBtn = quizContainer.querySelector('.previous-btn');
+    const nextBtn = quizContainer.querySelector('.next-btn');
+
     if (restartBtn) {
         restartBtn.removeEventListener('click', restartQuiz);
         restartBtn.addEventListener('click', restartQuiz);
@@ -681,21 +1002,59 @@ function startQuiz() {
     loadQuestion();
 }
 
-function restartQuiz() {
+function goToDashboard() {
+    // Return to dashboard without saving quiz attempt
+    const quizContainer = document.getElementById('quiz-container');
+    const dashboardContainer = document.getElementById('dashboard-container');
+    
+    if (quizContainer) quizContainer.style.display = 'none';
+    if (dashboardContainer) dashboardContainer.style.display = 'flex';
+
+    // Clear quiz state
+    clearInterval(timerInterval);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    
     currentQuestion = 0;
     score = 0;
     attempted = 0;
     userAnswers = [];
     timeLeft = 15;
     streak = 0;
-    if (timerEl) timerEl.textContent = timeLeft;
+    navigatedBack = false;
+    suppressSpeak = false;
+    lastAttemptedIndex = -1;
+
+    // Re-render dashboard to reset toggle states
+    renderDashboard();
+}
+
+function restartQuiz() {
+    // Restart the same quiz
+    clearInterval(timerInterval);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    
+    currentQuestion = 0;
+    score = 0;
+    attempted = 0;
+    userAnswers = [];
+    timeLeft = 15;
+    streak = 0;
+    bestStreak = 0;
     if (streakEl) streakEl.textContent = '0';
 
-    questionEl.style.display = 'block';
-    optionsEl.style.display = 'flex';
+    const questionEl = quizContainer.querySelector('.question');
+    const optionsEl = quizContainer.querySelector('.options');
+    const feedbackEl = quizContainer.querySelector('#feedback');
+    const resultEl = quizContainer.querySelector('.result');
+    const summaryEl = quizContainer.querySelector('#summary');
+    const reviewEl = quizContainer.querySelector('#review');
+    const restartBtn = quizContainer.querySelector('.restart-btn');
+
+    if (questionEl) questionEl.style.display = 'block';
+    if (optionsEl) optionsEl.style.display = 'flex';
     if (feedbackEl) feedbackEl.style.display = 'block';
-    resultEl.style.display = 'none';
-    restartBtn.style.display = 'none';
+    if (resultEl) resultEl.style.display = 'none';
+    if (restartBtn) restartBtn.style.display = 'none';
 
     if (summaryEl) summaryEl.textContent = '';
     if (reviewEl) reviewEl.innerHTML = '';
@@ -704,8 +1063,6 @@ function restartQuiz() {
     navigatedBack = false;
     suppressSpeak = false;
     lastAttemptedIndex = -1;
-
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
     loadQuestion();
 }
@@ -730,18 +1087,3 @@ function goToNext() {
     }
     loadQuestion();
 }
-
-// Logout from quiz
-document.addEventListener('DOMContentLoaded', () => {
-    const quizLogoutBtn = document.getElementById('quiz-logout-btn');
-    if (quizLogoutBtn) {
-        quizLogoutBtn.addEventListener('click', () => {
-            currentUser = null;
-            quizContainer.style.display = 'none';
-            authContainer.style.display = 'block';
-            switchPage(document.getElementById('login-page'));
-            clearInterval(timerInterval);
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        });
-    }
-});

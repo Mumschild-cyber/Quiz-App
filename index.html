@@ -147,11 +147,69 @@
       </div>
     </div>
 
+    <!-- Settings Modal (Hidden by default) -->
+    <div id="settings-modal" class="settings-modal" style="display: none">
+      <div class="settings-content">
+        <div class="settings-header">
+          <h2>Settings</h2>
+          <button id="settings-close-btn" class="settings-close-btn">
+            &times;
+          </button>
+        </div>
+
+        <div class="settings-body">
+          <div class="settings-item">
+            <div class="settings-item-label">
+              <span class="settings-label-text">Speech</span>
+              <span class="settings-description"
+                >Enable/Disable question audio</span
+              >
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="speech-toggle" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-footer">
+          <button id="settings-logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Selection Dashboard (Hidden by default) -->
+    <div
+      id="dashboard-container"
+      class="dashboard-container"
+      style="display: none"
+    >
+      <div class="dashboard-header">
+        <h1 id="dashboard-welcome">Welcome!</h1>
+        <p class="dashboard-subtitle">Choose your quiz type</p>
+      </div>
+
+      <div class="dashboard-content">
+        <div id="quiz-topics-list" class="quiz-topics-list"></div>
+      </div>
+    </div>
+
     <!-- Quiz Container (Hidden by default) -->
     <div id="quiz-container" class="quiz-container" style="display: none">
       <div class="quiz-top-bar">
         <div class="user-info" id="user-info"></div>
-        <button id="quiz-logout-btn" class="logout-btn">Logout</button>
+        <div class="quiz-top-buttons">
+          <button
+            id="dashboard-btn"
+            class="dashboard-btn"
+            title="Back to Dashboard"
+          >
+            📊 Dashboard
+          </button>
+          <button id="settings-btn" class="settings-btn" title="Settings">
+            ⚙️
+          </button>
+        </div>
       </div>
       <div class="quiz-header">
         <div class="timer">Time Left: <span id="time">15</span>s</div>
