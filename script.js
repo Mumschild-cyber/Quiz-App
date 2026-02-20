@@ -151,6 +151,7 @@ const ADMIN_CREDENTIALS = {
 let currentUser = null;
 let isAdminMode = false;
 let allUsers = [];
+let serverAvailable = true;
 // when running with backend, we will fetch server data
 let currentQuizType = null; // Track selected quiz type
 
@@ -199,11 +200,14 @@ async function loadUsersFromServer() {
         const res = await fetch('/api/users');
         if (res.ok) {
             allUsers = await res.json();
+            serverAvailable = true;
         } else {
             console.warn('failed to load users', res.status);
+            serverAvailable = false;
         }
     } catch (err) {
         console.error('error fetching users', err);
+        serverAvailable = false;
     }
 }
 
@@ -213,8 +217,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.speechSynthesis.cancel();
     }
 
-    // fetch existing users from server
+    // fetch existing users from server (or fall back to localStorage)
     await loadUsersFromServer();
+    if (!serverAvailable) {
+        // load from local storage for legacy support
+        allUsers = JSON.parse(localStorage.getItem('quizUsers') || '[]');
+    }
 
     // Re-query form elements in case they weren't ready before
     const loginFormEl = document.getElementById('login-form');
@@ -229,6 +237,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         loginFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
             await loadUsersFromServer();
+            if (!serverAvailable) {
+                allUsers = JSON.parse(localStorage.getItem('quizUsers') || '[]');
+            }
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
@@ -273,20 +284,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 quizAttempts: []
             };
 
-            try {
-                const res = await fetch('/api/users', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newUser)
-                });
-                const created = await res.json();
-                allUsers.push(created);
-                alert('Account created successfully! You can now login.');
+            if (serverAvailable) {
+                try {
+                    const res = await fetch('/api/users', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newUser)
+                    });
+                    if (!res.ok) throw new Error(res.statusText);
+                    const created = await res.json();
+                    allUsers.push(created);
+                    alert('Account created successfully! You can now login.');
+                    signupFormEl.reset();
+                    switchPage(document.getElementById('login-page'));
+                } catch (err) {
+                    console.error('signup failed', err);
+                    alert('Failed to create account on server. Either start the backend or check network.');
+                }
+            } else {
+                // fallback to localStorage mechanism
+                newUser.id = Date.now();
+                newUser.createdAt = new Date().toLocaleString();
+                allUsers.push(newUser);
+                localStorage.setItem('quizUsers', JSON.stringify(allUsers));
+                alert('Account created locally – start server later to sync.');
                 signupFormEl.reset();
                 switchPage(document.getElementById('login-page'));
-            } catch (err) {
-                console.error('signup failed', err);
-                alert('Failed to create account, try again later');
             }
         });
     }
@@ -887,15 +910,19 @@ async function saveQuizAttempt(percent) {
         currentUser.quizAttempts.push(attempt);
         allUsers = allUsers.map(u => u.id === currentUser.id ? currentUser : u);
 
-        // update user on server
-        try {
-            await fetch(`/api/users/${currentUser.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentUser)
-            });
-        } catch (err) {
-            console.error('Failed to save attempt to server', err);
+        if (serverAvailable) {
+            try {
+                await fetch(`/api/users/${currentUser.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentUser)
+                });
+            } catch (err) {
+                console.error('Failed to save attempt to server', err);
+            }
+        } else {
+            // keep local copy too so data isn't lost
+            localStorage.setItem('quizUsers', JSON.stringify(allUsers));
         }
     }
 }
