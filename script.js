@@ -151,8 +151,39 @@ const ADMIN_CREDENTIALS = {
 let currentUser = null;
 let isAdminMode = false;
 let allUsers = [];
-let serverAvailable = true;
-// when running with backend, we will fetch server data
+
+/* Firebase configuration (replace with your project values) */
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const usersRef = firebase.database().ref('users');
+
+async function loadUsersFromServer() {
+    const snapshot = await usersRef.once('value');
+    const obj = snapshot.val() || {};
+    allUsers = Object.keys(obj).map(key => ({ ...obj[key], id: key }));
+}
+
+async function createUserOnServer(user) {
+    const newRef = usersRef.push();
+    user.id = newRef.key;
+    await newRef.set(user);
+    return user;
+}
+
+async function updateUserOnServer(user) {
+    if (!user.id) return;
+    await usersRef.child(user.id).set(user);
+}
+
 let currentQuizType = null; // Track selected quiz type
 
 // ============= PAGE ELEMENTS =============
@@ -195,49 +226,7 @@ let lastAttemptedIndex = -1;
 let enableSpeech = true;
 
 // ============= LOGIN & SIGNUP HANDLERS =============
-async function loadUsersFromServer() {
-    try {
-        const res = await fetch('/api/users');
-        if (res.ok) {
-            allUsers = await res.json();
-            serverAvailable = true;
-        } else {
-            console.warn('failed to load users', res.status);
-            serverAvailable = false;
-        }
-    } catch (err) {
-        console.error('error fetching users', err);
-        serverAvailable = false;
-    }
-}
-
-// when connection restored, migrate any locally saved accounts
-async function syncLocalToServer() {
-    const raw = localStorage.getItem('quizUsers');
-    if (!raw) return;
-    const local = JSON.parse(raw);
-    if (!local.length) return;
-
-    for (const usr of local) {
-        // skip duplicates by username
-        if (allUsers.find(u => u.username === usr.username)) continue;
-        try {
-            const res = await fetch('/api/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(usr)
-            });
-            if (res.ok) {
-                const created = await res.json();
-                allUsers.push(created);
-            }
-        } catch (e) {
-            console.error('failed migrating user', usr.username, e);
-        }
-    }
-
-    localStorage.removeItem('quizUsers');
-}
+// (Firebase-based loadUsersFromServer is defined earlier)
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Stop any ongoing speech on page load
@@ -245,16 +234,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.speechSynthesis.cancel();
     }
 
-    // fetch existing users from server (or fall back to localStorage)
+    // fetch existing users from Firebase
     await loadUsersFromServer();
-    if (serverAvailable) {
-        await syncLocalToServer();
-        // reload after sync to get any migrated accounts
-        await loadUsersFromServer();
-    } else {
-        // load from local storage for legacy support
-        allUsers = JSON.parse(localStorage.getItem('quizUsers') || '[]');
-    }
 
     // Re-query form elements in case they weren't ready before
     const loginFormEl = document.getElementById('login-form');
@@ -269,12 +250,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         loginFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
             await loadUsersFromServer();
-            if (serverAvailable) {
-                await syncLocalToServer();
-                await loadUsersFromServer();
-            } else {
-                allUsers = JSON.parse(localStorage.getItem('quizUsers') || '[]');
-            }
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
@@ -312,39 +287,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            const newUser = {
+            let newUser = {
                 username,
                 email,
                 password,
                 quizAttempts: []
             };
-
-            if (serverAvailable) {
-                try {
-                    const res = await fetch('/api/users', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newUser)
-                    });
-                    if (!res.ok) throw new Error(res.statusText);
-                    const created = await res.json();
-                    allUsers.push(created);
-                    alert('Account created successfully! You can now login.');
-                    signupFormEl.reset();
-                    switchPage(document.getElementById('login-page'));
-                } catch (err) {
-                    console.error('signup failed', err);
-                    alert('Failed to create account on server. Either start the backend or check network.');
-                }
-            } else {
-                // fallback to localStorage mechanism
-                newUser.id = Date.now();
-                newUser.createdAt = new Date().toLocaleString();
-                allUsers.push(newUser);
-                localStorage.setItem('quizUsers', JSON.stringify(allUsers));
-                alert('Account created locally – start server later to sync.');
+            try {
+                const created = await createUserOnServer(newUser);
+                allUsers.push(created);
+                alert('Account created successfully! You can now login.');
                 signupFormEl.reset();
                 switchPage(document.getElementById('login-page'));
+            } catch (err) {
+                console.error('signup failed', err);
+                alert('Unable to create account. Check Firebase configuration and network.');
             }
         });
     }
@@ -945,19 +902,10 @@ async function saveQuizAttempt(percent) {
         currentUser.quizAttempts.push(attempt);
         allUsers = allUsers.map(u => u.id === currentUser.id ? currentUser : u);
 
-        if (serverAvailable) {
-            try {
-                await fetch(`/api/users/${currentUser.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(currentUser)
-                });
-            } catch (err) {
-                console.error('Failed to save attempt to server', err);
-            }
-        } else {
-            // keep local copy too so data isn't lost
-            localStorage.setItem('quizUsers', JSON.stringify(allUsers));
+        try {
+            await updateUserOnServer(currentUser);
+        } catch (err) {
+            console.error('Failed to update user in Firebase', err);
         }
     }
 }
