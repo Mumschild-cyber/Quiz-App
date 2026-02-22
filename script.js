@@ -211,6 +211,34 @@ async function loadUsersFromServer() {
     }
 }
 
+// when connection restored, migrate any locally saved accounts
+async function syncLocalToServer() {
+    const raw = localStorage.getItem('quizUsers');
+    if (!raw) return;
+    const local = JSON.parse(raw);
+    if (!local.length) return;
+
+    for (const usr of local) {
+        // skip duplicates by username
+        if (allUsers.find(u => u.username === usr.username)) continue;
+        try {
+            const res = await fetch('/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(usr)
+            });
+            if (res.ok) {
+                const created = await res.json();
+                allUsers.push(created);
+            }
+        } catch (e) {
+            console.error('failed migrating user', usr.username, e);
+        }
+    }
+
+    localStorage.removeItem('quizUsers');
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Stop any ongoing speech on page load
     if ('speechSynthesis' in window) {
@@ -219,7 +247,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // fetch existing users from server (or fall back to localStorage)
     await loadUsersFromServer();
-    if (!serverAvailable) {
+    if (serverAvailable) {
+        await syncLocalToServer();
+        // reload after sync to get any migrated accounts
+        await loadUsersFromServer();
+    } else {
         // load from local storage for legacy support
         allUsers = JSON.parse(localStorage.getItem('quizUsers') || '[]');
     }
@@ -237,7 +269,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         loginFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
             await loadUsersFromServer();
-            if (!serverAvailable) {
+            if (serverAvailable) {
+                await syncLocalToServer();
+                await loadUsersFromServer();
+            } else {
                 allUsers = JSON.parse(localStorage.getItem('quizUsers') || '[]');
             }
             const username = document.getElementById('login-username').value.trim();
