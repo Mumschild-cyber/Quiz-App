@@ -20,6 +20,12 @@ if (!fs.existsSync(DATA_FILE)) {
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
+// simple request logger
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+    next();
+});
+
 function readUsers() {
     try {
         const contents = fs.readFileSync(DATA_FILE, 'utf8');
