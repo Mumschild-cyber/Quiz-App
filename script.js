@@ -432,9 +432,308 @@ document.addEventListener('DOMContentLoaded', async () => {
             clearInterval(timerInterval);
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
             if (settingsModal) settingsModal.style.display = 'none';
+            if (navbar) navbar.style.display = 'none';
+            if (profileBtn) profileBtn.style.display = 'none';
         });
     }
+
+    // ============= NAVBAR HANDLERS =============
+    const profileBtn = document.getElementById('profile-btn');
+    const navDropdown = document.getElementById('nav-dropdown');
+    const profileModal = document.getElementById('profile-modal');
+    const profileCloseBtn = document.getElementById('profile-close-btn');
+    const profileLogoutBtn = document.getElementById('profile-logout-btn');
+    const uploadProfileBtn = document.getElementById('upload-profile-btn');
+    const profilePictureInput = document.getElementById('profile-picture-input');
+    const navHome = document.getElementById('nav-home');
+    const navDashboard = document.getElementById('nav-dashboard');
+    const navSettings = document.getElementById('nav-settings');
+    const searchInput = document.getElementById('search-input');
+    const searchBox = document.getElementById('search-box');
+    const navbar = document.getElementById('navbar');
+
+    // Toggle dropdown
+    if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (navDropdown) {
+                navDropdown.classList.toggle('active');
+            }
+        });
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navDropdown && profileBtn && !profileBtn.contains(e.target) && !navDropdown.contains(e.target)) {
+            navDropdown.classList.remove('active');
+        }
+    });
+
+    // Navbar navigation
+    if (navHome) {
+        navHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser) {
+                goToDashboard();
+                navDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    if (navDashboard) {
+        navDashboard.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser) {
+                goToDashboard();
+                navDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    if (navSettings) {
+        navSettings.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser && settingsModal) {
+                settingsModal.style.display = 'flex';
+                navDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    // Profile modal handlers
+    if (profileBtn && !currentUser) {
+        profileBtn.style.display = 'none';
+    }
+
+    if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+            if (currentUser && e.target.closest('.profile-btn') && !e.target.closest('.nav-dropdown')) {
+                profileModal.style.display = 'flex';
+                updateProfileDisplay();
+                navDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    if (profileCloseBtn) {
+        profileCloseBtn.addEventListener('click', () => {
+            profileModal.style.display = 'none';
+        });
+    }
+
+    if (profileModal) {
+        profileModal.addEventListener('click', (e) => {
+            if (e.target === profileModal) {
+                profileModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (profileLogoutBtn) {
+        profileLogoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            enableSpeech = true;
+            quizContainer.style.display = 'none';
+            authContainer.style.display = 'block';
+            switchPage(document.getElementById('login-page'));
+            clearInterval(timerInterval);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (profileModal) profileModal.style.display = 'none';
+            if (navDropdown) navDropdown.classList.remove('active');
+            if (profileBtn) profileBtn.style.display = 'none';
+            navbar.style.display = 'none';
+        });
+    }
+
+    if (uploadProfileBtn) {
+        uploadProfileBtn.addEventListener('click', () => {
+            if (profilePictureInput) {
+                profilePictureInput.click();
+            }
+        });
+    }
+
+    if (profilePictureInput) {
+        profilePictureInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && currentUser) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const profileImg = document.getElementById('profile-img');
+                    if (profileImg) {
+                        profileImg.src = event.target.result;
+                        currentUser.profilePicture = event.target.result;
+                        updateUserOnServer(currentUser);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (query.length > 0) {
+                filterQuizzes(query);
+            } else {
+                renderAllQuizzes();
+            }
+        });
+    }
+
+    // Hide search when not on dashboard
+    const observePageChanges = () => {
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const authContainer = document.getElementById('auth-container');
+        
+        if (searchBox && dashboardContainer) {
+            if (dashboardContainer.style.display === 'none') {
+                searchBox.classList.add('hidden');
+            } else {
+                searchBox.classList.remove('hidden');
+            }
+        }
+
+        if (quizContainer && quizContainer.style.display !== 'none') {
+            if (searchBox) searchBox.classList.add('hidden');
+        }
+    };
+
+    // Call whenever page changes
+    const originalGoToDashboard = window.goToDashboard;
+    window.goToDashboard = function() {
+        originalGoToDashboard.call(this);
+        observePageChanges();
+    };
+
+    const originalStartQuiz = window.startQuiz;
+    window.startQuiz = function() {
+        originalStartQuiz.call(this);
+        observePageChanges();
+    };
+
+    // ============= THEME SWITCHING =============
+    const themeDark = document.getElementById('theme-dark');
+    const themeLight = document.getElementById('theme-light');
+    const themeApp = document.getElementById('theme-app');
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('appTheme') || 'app';
+    
+    if (savedTheme === 'dark' && themeDark) themeDark.checked = true;
+    else if (savedTheme === 'light' && themeLight) themeLight.checked = true;
+    else if (themeApp) themeApp.checked = true;
+
+    applyTheme(savedTheme);
+
+    // Update theme on change
+    const updateTheme = (theme) => {
+        localStorage.setItem('appTheme', theme);
+        applyTheme(theme);
+    };
+
+    if (themeDark) themeDark.addEventListener('change', () => updateTheme('dark'));
+    if (themeLight) themeLight.addEventListener('change', () => updateTheme('light'));
+    if (themeApp) themeApp.addEventListener('change', () => updateTheme('app'));
 });
+
+// ============= NAVBAR & PROFILE FUNCTIONS =============
+function updateProfileDisplay() {
+    if (!currentUser) return;
+
+    const profileName = document.getElementById('profile-name');
+    const profileEmail = document.getElementById('profile-email');
+    const profileUsername = document.getElementById('profile-username');
+    const profileQuizzes = document.getElementById('profile-quizzes');
+    const profileImg = document.getElementById('profile-img');
+
+    if (profileName) profileName.textContent = currentUser.name || currentUser.username;
+    if (profileEmail) profileEmail.textContent = currentUser.email || '-';
+    if (profileUsername) profileUsername.textContent = currentUser.username;
+    if (profileQuizzes) profileQuizzes.textContent = (currentUser.quizAttempts && currentUser.quizAttempts.length) || 0;
+    if (profileImg && currentUser.profilePicture) {
+        profileImg.src = currentUser.profilePicture;
+    }
+}
+
+function filterQuizzes(query) {
+    const quizTopicsList = document.getElementById('quiz-topics-list');
+    if (!quizTopicsList) return;
+
+    const cards = quizTopicsList.querySelectorAll('.quiz-topic-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const icon = card.querySelector('span');
+        if (text.includes(query)) {
+            card.style.display = 'grid';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Show message if no results
+    if (visibleCount === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'no-results-message';
+        noResults.innerHTML = '<p>No quizzes found matching your search</p>';
+        if (quizTopicsList.querySelector('.no-results-message')) {
+            quizTopicsList.querySelector('.no-results-message').remove();
+        }
+        quizTopicsList.appendChild(noResults);
+    } else {
+        const noResults = quizTopicsList.querySelector('.no-results-message');
+        if (noResults) noResults.remove();
+    }
+}
+
+function renderAllQuizzes() {
+    const quizTopicsList = document.getElementById('quiz-topics-list');
+    if (!quizTopicsList) return;
+
+    const cards = quizTopicsList.querySelectorAll('.quiz-topic-card');
+    cards.forEach(card => {
+        card.style.display = 'grid';
+    });
+
+    const noResults = quizTopicsList.querySelector('.no-results-message');
+    if (noResults) noResults.remove();
+}
+
+function applyTheme(theme) {
+    const root = document.documentElement;
+    
+    if (theme === 'dark') {
+        root.style.setProperty('--bg-0', '#0f0f0f');
+        root.style.setProperty('--bg-1', '#1a1a1a');
+        root.style.setProperty('--bg-2', '#2a2a2a');
+        root.style.setProperty('--text', '#ffffff');
+        root.style.setProperty('--muted', 'rgba(255, 255, 255, 0.75)');
+        root.style.setProperty('--card', 'rgba(255, 255, 255, 0.05)');
+    } else if (theme === 'light') {
+        root.style.setProperty('--bg-0', '#f5f5f5');
+        root.style.setProperty('--bg-1', '#e8e8e8');
+        root.style.setProperty('--bg-2', '#d4d4d4');
+        root.style.setProperty('--text', '#1a1a1a');
+        root.style.setProperty('--muted', 'rgba(0, 0, 0, 0.6)');
+        root.style.setProperty('--card', 'rgba(0, 0, 0, 0.08)');
+    } else {
+        // App theme (default)
+        root.style.setProperty('--bg-0', '#14532d');
+        root.style.setProperty('--bg-1', '#166534');
+        root.style.setProperty('--bg-2', '#15803d');
+        root.style.setProperty('--text', '#ffffff');
+        root.style.setProperty('--muted', 'rgba(255, 255, 255, 0.75)');
+        root.style.setProperty('--card', 'rgba(234, 179, 8, 0.25)');
+    }
+
+    document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+}
 
 function switchPage(targetPage) {
     document.querySelectorAll('.auth-page').forEach(page => {
@@ -447,6 +746,14 @@ function switchPage(targetPage) {
 async function showAdminDashboard() {
     authContainer.style.display = 'none';
     quizContainer.style.display = 'none';
+    const dashboardContainer = document.getElementById('dashboard-container');
+    const navbar = document.getElementById('navbar');
+    const profileBtn = document.getElementById('profile-btn');
+    
+    if (dashboardContainer) dashboardContainer.style.display = 'none';
+    if (navbar) navbar.style.display = 'none';
+    if (profileBtn) profileBtn.style.display = 'none';
+    
     adminContainer.style.display = 'block';
     
     await loadUsersFromServer(); // make sure we have fresh data
@@ -917,9 +1224,23 @@ function startQuiz() {
     authContainer.style.display = 'none';
     adminContainer.style.display = 'none';
     const dashboardContainer = document.getElementById('dashboard-container');
+    const navbar = document.getElementById('navbar');
+    const profileBtn = document.getElementById('profile-btn');
+    const searchBox = document.getElementById('search-box');
+    
     if (dashboardContainer) {
         dashboardContainer.style.display = 'flex';
     }
+    if (navbar) {
+        navbar.style.display = 'flex';
+    }
+    if (profileBtn) {
+        profileBtn.style.display = 'flex';
+    }
+    if (searchBox) {
+        searchBox.classList.remove('hidden');
+    }
+    
     quizContainer.style.display = 'none';
 
     // Update dashboard welcome message
@@ -928,8 +1249,36 @@ function startQuiz() {
         welcomeMsg.textContent = `Welcome, ${currentUser.username}!`;
     }
 
-    // Render quiz topics
+    // Render quiz topics and stats
     renderDashboard();
+    updateDashboardStats();
+}
+
+function updateDashboardStats() {
+    if (!currentUser) return;
+
+    // Calculate stats
+    const totalQuizzes = currentUser.quizAttempts ? currentUser.quizAttempts.length : 0;
+    let totalQuestions = 0;
+    let totalCorrect = 0;
+
+    if (currentUser.quizAttempts && currentUser.quizAttempts.length > 0) {
+        currentUser.quizAttempts.forEach(attempt => {
+            if (attempt.answers) {
+                totalQuestions += attempt.answers.length;
+                totalCorrect += attempt.answers.filter(a => a.isCorrect).length;
+            }
+        });
+    }
+
+    const progressPercent = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+
+    // Update stat elements
+    const statQuizzes = document.getElementById('stat-quizzes');
+    const statProgress = document.getElementById('stat-progress');
+
+    if (statQuizzes) statQuizzes.textContent = totalQuizzes;
+    if (statProgress) statProgress.textContent = progressPercent + '%';
 }
 
 function renderDashboard() {
@@ -1019,9 +1368,19 @@ function handleConfirmQuiz(event, quizType) {
     initializeQuizElements();
     
     const dashboardContainer = document.getElementById('dashboard-container');
+    const navbar = document.getElementById('navbar');
+    const searchBox = document.getElementById('search-box');
+    
     if (dashboardContainer) {
         dashboardContainer.style.display = 'none';
     }
+    if (navbar) {
+        navbar.style.display = 'none';
+    }
+    if (searchBox) {
+        searchBox.classList.add('hidden');
+    }
+    
     quizContainer.style.display = 'block';
 
     if (userInfoEl) {
@@ -1080,9 +1439,13 @@ function goToDashboard() {
     // Return to dashboard without saving quiz attempt
     const quizContainer = document.getElementById('quiz-container');
     const dashboardContainer = document.getElementById('dashboard-container');
+    const navbar = document.getElementById('navbar');
+    const searchBox = document.getElementById('search-box');
     
     if (quizContainer) quizContainer.style.display = 'none';
     if (dashboardContainer) dashboardContainer.style.display = 'flex';
+    if (navbar) navbar.style.display = 'flex';
+    if (searchBox) searchBox.classList.remove('hidden');
 
     // Clear quiz state
     clearInterval(timerInterval);
@@ -1100,6 +1463,7 @@ function goToDashboard() {
 
     // Re-render dashboard to reset toggle states
     renderDashboard();
+    updateDashboardStats();
 }
 
 function restartQuiz() {

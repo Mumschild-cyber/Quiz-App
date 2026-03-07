@@ -4,10 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Intellibliss - Quiz Mastery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
   </head>
   <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+      <div class="navbar-left">
+        <button class="profile-btn" id="profile-btn" title="Profile">
+          <i class="fas fa-user-circle"></i>
+        </button>
+        <div class="nav-dropdown" id="nav-dropdown">
+          <a href="#" class="nav-dropdown-item" id="nav-home">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="#" class="nav-dropdown-item" id="nav-dashboard">
+            <i class="fas fa-chart-line"></i> Dashboard
+          </a>
+          <a href="#" class="nav-dropdown-item" id="nav-settings">
+            <i class="fas fa-cog"></i> Settings
+          </a>
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <div class="search-box hidden" id="search-box">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="Search quizzes..."
+          />
+        </div>
+      </div>
+    </nav>
+
     <!-- Auth Pages -->
     <div id="auth-container" class="auth-container">
       <!-- Login Page -->
@@ -219,6 +255,68 @@
       </div>
     </div>
 
+    <!-- Profile Modal (Hidden by default) -->
+    <div id="profile-modal" class="profile-modal" style="display: none">
+      <div class="profile-content">
+        <div class="profile-header">
+          <h2>Profile</h2>
+          <button id="profile-close-btn" class="profile-close-btn">
+            &times;
+          </button>
+        </div>
+
+        <div class="profile-body">
+          <div class="profile-picture-section">
+            <img
+              id="profile-img"
+              src="https://via.placeholder.com/120"
+              alt="Profile Picture"
+              class="profile-picture"
+            />
+            <input
+              type="file"
+              id="profile-picture-input"
+              class="profile-picture-input"
+              accept="image/*"
+              style="display: none"
+            />
+            <button
+              type="button"
+              id="upload-profile-btn"
+              class="upload-profile-btn"
+            >
+              <i class="fas fa-camera"></i> Change Picture
+            </button>
+          </div>
+
+          <div class="profile-details">
+            <div class="profile-field">
+              <label>Name</label>
+              <p id="profile-name" class="profile-value">-</p>
+            </div>
+            <div class="profile-field">
+              <label>Email</label>
+              <p id="profile-email" class="profile-value">-</p>
+            </div>
+            <div class="profile-field">
+              <label>Username</label>
+              <p id="profile-username" class="profile-value">-</p>
+            </div>
+            <div class="profile-field">
+              <label>Quizzes Attempted</label>
+              <p id="profile-quizzes" class="profile-value">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-footer">
+          <button id="profile-logout-btn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Settings Modal (Hidden by default) -->
     <div id="settings-modal" class="settings-modal" style="display: none">
       <div class="settings-content">
@@ -230,17 +328,65 @@
         </div>
 
         <div class="settings-body">
-          <div class="settings-item">
-            <div class="settings-item-label">
-              <span class="settings-label-text">Speech</span>
-              <span class="settings-description"
-                >Enable/Disable question audio</span
-              >
+          <div class="settings-group">
+            <h3 class="settings-group-title">Theme</h3>
+            <div class="settings-item">
+              <div class="settings-item-label">
+                <span class="settings-label-text">Dark Mode</span>
+                <span class="settings-description">Dark theme</span>
+              </div>
+              <label class="theme-radio">
+                <input type="radio" name="theme" value="dark" id="theme-dark" />
+                <span class="theme-option-label">
+                  <i class="fas fa-moon"></i> Dark
+                </span>
+              </label>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" id="speech-toggle" checked />
-              <span class="toggle-slider"></span>
-            </label>
+            <div class="settings-item">
+              <div class="settings-item-label">
+                <span class="settings-label-text">Light Mode</span>
+                <span class="settings-description">Light theme</span>
+              </div>
+              <label class="theme-radio">
+                <input
+                  type="radio"
+                  name="theme"
+                  value="light"
+                  id="theme-light"
+                />
+                <span class="theme-option-label">
+                  <i class="fas fa-sun"></i> Light
+                </span>
+              </label>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-label">
+                <span class="settings-label-text">App Theme</span>
+                <span class="settings-description">Application theme</span>
+              </div>
+              <label class="theme-radio">
+                <input type="radio" name="theme" value="app" id="theme-app" />
+                <span class="theme-option-label">
+                  <i class="fas fa-palette"></i> App
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <h3 class="settings-group-title">Preferences</h3>
+            <div class="settings-item">
+              <div class="settings-item-label">
+                <span class="settings-label-text">Speech</span>
+                <span class="settings-description"
+                  >Enable/Disable question audio</span
+                >
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="speech-toggle" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -271,6 +417,27 @@
       <div class="dashboard-header">
         <h1 id="dashboard-welcome">Welcome!</h1>
         <p class="dashboard-subtitle">Choose your quiz type</p>
+      </div>
+
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-label">Quizzes Attempted</div>
+            <div class="stat-value" id="stat-quizzes">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-label">Overall Progress</div>
+            <div class="stat-value" id="stat-progress">0%</div>
+          </div>
+        </div>
       </div>
 
       <div class="dashboard-content">
