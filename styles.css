@@ -621,6 +621,22 @@ body {
     z-index: 1;
 }
 
+@media (max-width: 480px) {
+    .login-box {
+        width: 100%;
+        max-width: 400px;
+        position: static;
+        transform: none;
+        margin: 0 auto;
+    }
+
+    .container {
+        width: 100%;
+        height: auto;
+        min-height: 256px;
+    }
+}
+
 .login-box form {
     width: 100%;
     padding: 0 50px;

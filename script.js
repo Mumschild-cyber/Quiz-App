@@ -152,37 +152,39 @@ let currentUser = null;
 let isAdminMode = false;
 let allUsers = [];
 
-/* Firebase configuration (replace with your project values) */
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "SENDER_ID",
-    appId: "APP_ID"
-};
+// ============= LOCALSTORAGE AUTHENTICATION =============
+// Initialize users from localStorage
+function initializeUsersStorage() {
+    if (!localStorage.getItem('quiz_users')) {
+        localStorage.setItem('quiz_users', JSON.stringify([]));
+    }
+}
 
-firebase.initializeApp(firebaseConfig);
-const usersRef = firebase.database().ref('users');
-
-async function loadUsersFromServer() {
-    const snapshot = await usersRef.once('value');
-    const obj = snapshot.val() || {};
-    allUsers = Object.keys(obj).map(key => ({ ...obj[key], id: key }));
+function loadUsersFromServer() {
+    const storedUsers = localStorage.getItem('quiz_users');
+    allUsers = storedUsers ? JSON.parse(storedUsers) : [];
 }
 
 async function createUserOnServer(user) {
-    const newRef = usersRef.push();
-    user.id = newRef.key;
-    await newRef.set(user);
+    user.id = Date.now().toString(); // Simple ID generation
+    loadUsersFromServer(); // Get latest users
+    allUsers.push(user);
+    localStorage.setItem('quiz_users', JSON.stringify(allUsers));
     return user;
 }
 
 async function updateUserOnServer(user) {
     if (!user.id) return;
-    await usersRef.child(user.id).set(user);
+    loadUsersFromServer(); // Get latest users
+    const index = allUsers.findIndex(u => u.id === user.id);
+    if (index !== -1) {
+        allUsers[index] = user;
+        localStorage.setItem('quiz_users', JSON.stringify(allUsers));
+    }
 }
+
+// Initialize on load
+initializeUsersStorage();
 
 let currentQuizType = null; // Track selected quiz type
 
@@ -234,13 +236,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.speechSynthesis.cancel();
     }
 
-    // fetch existing users from Firebase
-    await loadUsersFromServer();
+    // Load existing users from localStorage
+    loadUsersFromServer();
 
     // Re-query form elements in case they weren't ready before
-    const loginFormEl = document.getElementById('login-form');
-    const signupFormEl = document.getElementById('signup-form');
-    const adminLoginFormEl = document.getElementById('admin-login-form');
+    const loginFormEl = document.getElementById('login-form') || null;
+    const signupFormEl = document.getElementById('signup-form') || null;
+    const adminLoginFormEl = document.getElementById('admin-login-form') || null;
     const toSignupLink = document.getElementById('to-signup-from-login');
     const toLoginLink = document.getElementById('to-login-from-signup');
     const backToLoginLink = document.getElementById('back-to-login');
@@ -249,7 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loginFormEl) {
         loginFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
-            await loadUsersFromServer();
+            loadUsersFromServer();
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
