@@ -852,6 +852,7 @@ body {
         width: 100%;
         height: auto;
         min-height: 256px;
+        overflow: hidden; /* Prevent animation spans from overflowing */
     }
 
     .container span {
