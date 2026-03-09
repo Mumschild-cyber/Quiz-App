@@ -856,14 +856,12 @@ body {
     }
 
     .container span {
-        transform-origin: 50% 50%;
-        transform: scale(0.5) rotate(calc(var(--i) * (360deg / 50)));
-        width: 16px;
-        height: 3px;
         left: 50%;
         top: 50%;
-        margin-left: -8px;
-        margin-top: -1.5px;
+        transform-origin: 50% 50%;
+        transform: translateX(-50px) rotate(calc(var(--i) * (360deg / 50))) scale(0.2);
+        width: 10px;
+        height: 2px;
     }
 
     .login-box form {
