@@ -360,6 +360,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     speechToggle = document.getElementById('speech-toggle');
     settingsLogoutBtn = document.getElementById('settings-logout-btn');
 
+    // Cancel quiz modal handlers
+    const cancelQuizModal = document.getElementById('cancel-quiz-modal');
+    const cancelQuizBtn = document.getElementById('cancel-quiz-btn');
+    const cancelQuizYes = document.getElementById('cancel-quiz-yes');
+    const cancelQuizNo = document.getElementById('cancel-quiz-no');
+
     const dashboardBtn = document.getElementById('dashboard-btn');
     if (dashboardBtn) {
         dashboardBtn.addEventListener('click', () => {
@@ -388,6 +394,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) {
                 settingsModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (cancelQuizBtn) {
+        cancelQuizBtn.addEventListener('click', () => {
+            if (cancelQuizModal) {
+                cancelQuizModal.style.display = 'flex';
+            }
+        });
+    }
+
+    if (cancelQuizYes) {
+        cancelQuizYes.addEventListener('click', () => {
+            goToDashboard();
+            if (cancelQuizModal) {
+                cancelQuizModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (cancelQuizNo) {
+        cancelQuizNo.addEventListener('click', () => {
+            if (cancelQuizModal) {
+                cancelQuizModal.style.display = 'none';
+            }
+        });
+    }
+
+    // Close cancel modal when clicking outside
+    if (cancelQuizModal) {
+        cancelQuizModal.addEventListener('click', (e) => {
+            if (e.target === cancelQuizModal) {
+                cancelQuizModal.style.display = 'none';
             }
         });
     }
@@ -439,6 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ============= NAVBAR HANDLERS =============
     const profileBtn = document.getElementById('profile-btn');
+    const navDashboardBtn = document.getElementById('nav-dashboard-btn');
     const navDropdown = document.getElementById('nav-dropdown');
     const profileModal = document.getElementById('profile-modal');
     const profileCloseBtn = document.getElementById('profile-close-btn');
@@ -459,6 +500,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (navDropdown) {
                 navDropdown.classList.toggle('active');
             }
+        });
+    }
+
+    if (navDashboardBtn) {
+        navDashboardBtn.addEventListener('click', () => {
+            goToDashboard();
         });
     }
 
@@ -1251,7 +1298,9 @@ function startQuiz() {
 
     // Render quiz topics and stats
     renderDashboard();
-    updateDashboardStats();
+    // updateDashboardStats(); // Removed to show stats only when dashboard is clicked
+    const dashboardStats = document.getElementById('dashboard-stats');
+    if (dashboardStats) dashboardStats.style.display = 'none';
 }
 
 function updateDashboardStats() {
@@ -1464,6 +1513,8 @@ function goToDashboard() {
     // Re-render dashboard to reset toggle states
     renderDashboard();
     updateDashboardStats();
+    const dashboardStats = document.getElementById('dashboard-stats');
+    if (dashboardStats) dashboardStats.style.display = 'flex';
 }
 
 function restartQuiz() {

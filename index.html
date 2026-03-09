@@ -4,11 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Intellibliss - Quiz Mastery</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
     <link rel="stylesheet" href="styles.css" />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -16,24 +20,28 @@
     <nav class="navbar" id="navbar">
       <div class="navbar-left">
         <button class="profile-btn" id="profile-btn" title="Profile">
-          <i class="fas fa-user-circle"></i>
+          <ion-icon name="person-circle"></ion-icon>
+        </button>
+        <button
+          class="dashboard-nav-btn"
+          id="nav-dashboard-btn"
+          title="Dashboard"
+        >
+          <ion-icon name="analytics"></ion-icon>
         </button>
         <div class="nav-dropdown" id="nav-dropdown">
           <a href="#" class="nav-dropdown-item" id="nav-home">
-            <i class="fas fa-home"></i> Home
-          </a>
-          <a href="#" class="nav-dropdown-item" id="nav-dashboard">
-            <i class="fas fa-chart-line"></i> Dashboard
+            <ion-icon name="home"></ion-icon> Home
           </a>
           <a href="#" class="nav-dropdown-item" id="nav-settings">
-            <i class="fas fa-cog"></i> Settings
+            <ion-icon name="settings-outline"></ion-icon> Settings
           </a>
         </div>
       </div>
 
       <div class="navbar-right">
         <div class="search-box hidden" id="search-box">
-          <i class="fas fa-search"></i>
+          <ion-icon name="search"></ion-icon>
           <input
             type="text"
             id="search-input"
@@ -285,7 +293,7 @@
               id="upload-profile-btn"
               class="upload-profile-btn"
             >
-              <i class="fas fa-camera"></i> Change Picture
+              <ion-icon name="camera"></ion-icon> Change Picture
             </button>
           </div>
 
@@ -311,7 +319,7 @@
 
         <div class="profile-footer">
           <button id="profile-logout-btn" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Logout
+            <ion-icon name="log-out"></ion-icon> Logout
           </button>
         </div>
       </div>
@@ -338,7 +346,7 @@
               <label class="theme-radio">
                 <input type="radio" name="theme" value="dark" id="theme-dark" />
                 <span class="theme-option-label">
-                  <i class="fas fa-moon"></i> Dark
+                  <ion-icon name="moon"></ion-icon> Dark
                 </span>
               </label>
             </div>
@@ -355,7 +363,7 @@
                   id="theme-light"
                 />
                 <span class="theme-option-label">
-                  <i class="fas fa-sun"></i> Light
+                  <ion-icon name="sunny"></ion-icon> Light
                 </span>
               </label>
             </div>
@@ -367,7 +375,7 @@
               <label class="theme-radio">
                 <input type="radio" name="theme" value="app" id="theme-app" />
                 <span class="theme-option-label">
-                  <i class="fas fa-palette"></i> App
+                  <ion-icon name="color-palette"></ion-icon> App
                 </span>
               </label>
             </div>
@@ -392,6 +400,25 @@
 
         <div class="settings-footer">
           <button id="settings-logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cancel Quiz Modal (Hidden by default) -->
+    <div id="cancel-quiz-modal" class="cancel-quiz-modal" style="display: none">
+      <div class="cancel-quiz-content">
+        <div class="cancel-quiz-header">
+          <h2>Cancel Quiz</h2>
+        </div>
+        <div class="cancel-quiz-body">
+          <p>
+            Are you sure you want to cancel the quiz? This will affect your
+            progress.
+          </p>
+        </div>
+        <div class="cancel-quiz-footer">
+          <button id="cancel-quiz-yes" class="cancel-yes-btn">Yes</button>
+          <button id="cancel-quiz-no" class="cancel-no-btn">No</button>
         </div>
       </div>
     </div>
@@ -422,7 +449,7 @@
       <div class="dashboard-stats">
         <div class="stat-card">
           <div class="stat-icon">
-            <i class="fas fa-check-circle"></i>
+            <ion-icon name="checkmark-circle"></ion-icon>
           </div>
           <div class="stat-info">
             <div class="stat-label">Quizzes Attempted</div>
@@ -431,7 +458,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon">
-            <i class="fas fa-chart-pie"></i>
+            <ion-icon name="pie-chart"></ion-icon>
           </div>
           <div class="stat-info">
             <div class="stat-label">Overall Progress</div>
@@ -451,14 +478,14 @@
         <div class="user-info" id="user-info"></div>
         <div class="quiz-top-buttons">
           <button
-            id="dashboard-btn"
-            class="dashboard-btn"
-            title="Back to Dashboard"
+            id="cancel-quiz-btn"
+            class="cancel-quiz-btn"
+            title="Cancel Quiz"
           >
-            📊 Dashboard
+            <ion-icon name="close"></ion-icon>
           </button>
           <button id="settings-btn" class="settings-btn" title="Settings">
-            ⚙️
+            <ion-icon name="settings-outline"></ion-icon>
           </button>
         </div>
       </div>
