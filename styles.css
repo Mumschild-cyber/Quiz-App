@@ -671,6 +671,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    /* background: linear-gradient(145deg, var(--bg-0), var(--bg-1) 50%, var(--bg-2)); */
 }
 
 .auth-page {
@@ -818,6 +819,7 @@ body {
     transform: scale(2.2) rotate(calc(var(--i) *(360deg / 50)));
     animation: animateCircle 3s linear infinite;
     animation-delay: calc(var(--i) * (3s / 50));
+    display: none; /* Removed animation */
 }
 
 @keyframes animateCircle {
@@ -862,6 +864,7 @@ body {
         transform: translateX(-50px) rotate(calc(var(--i) * (360deg / 50))) scale(0.2);
         width: 10px;
         height: 2px;
+        display: none; /* Removed animation */
     }
 
     .login-box form {
