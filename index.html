@@ -1,432 +1,466 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Intellibliss - Quiz Mastery</title>
     <link rel="stylesheet" href="styles.css" />
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="script.js" defer></script>
-  </head>
-  <body>
+</head>
+<body>
     <!-- Navigation Bar -->
     <nav class="navbar" id="navbar">
-      <div class="navbar-left">
-        <button class="profile-btn" id="profile-btn" title="Profile">
-          <ion-icon name="person-circle"></ion-icon>
-        </button>
-        <button
-          class="dashboard-nav-btn"
-          id="nav-dashboard-btn"
-          title="Dashboard"
-        >
-          <ion-icon name="analytics"></ion-icon>
-        </button>
-        <div class="nav-dropdown" id="nav-dropdown">
-          <a href="#" class="nav-dropdown-item" id="nav-home">
-            <ion-icon name="home"></ion-icon> Home
-          </a>
-          <a href="#" class="nav-dropdown-item" id="nav-settings">
-            <ion-icon name="settings-outline"></ion-icon> Settings
-          </a>
+        <div class="navbar-left">
+            <button class="profile-btn" id="profile-btn" title="Profile">
+                <ion-icon name="person-circle"></ion-icon>
+            </button>
+            <button class="dashboard-nav-btn" id="nav-dashboard-btn" title="Dashboard">
+                <ion-icon name="home"></ion-icon>
+            </button>
+            <button class="leaderboard-nav-btn" id="nav-leaderboard-btn" title="Leaderboard">
+                <ion-icon name="trophy"></ion-icon>
+            </button>
+            <div class="nav-dropdown" id="nav-dropdown">
+                <a href="#" class="nav-dropdown-item" id="nav-settings">
+                    <ion-icon name="settings-outline"></ion-icon> Settings
+                </a>
+                <a href="#" class="nav-dropdown-item" id="nav-achievements">
+                    <ion-icon name="medal-outline"></ion-icon> Achievements
+                </a>
+                <a href="#" class="nav-dropdown-item" id="nav-daily">
+                    <ion-icon name="calendar-outline"></ion-icon> Daily Challenge
+                </a>
+            </div>
         </div>
-      </div>
 
-      <div class="navbar-right">
-        <div class="search-box hidden" id="search-box">
-          <ion-icon name="search"></ion-icon>
-          <input
-            type="text"
-            id="search-input"
-            class="search-input"
-            placeholder="Search quizzes..."
-          />
+        <div class="navbar-right">
+            <div class="search-box hidden" id="search-box">
+                <ion-icon name="search"></ion-icon>
+                <input type="text" id="search-input" class="search-input" placeholder="Search quizzes..." />
+            </div>
+            <div class="timer-controls hidden" id="timer-controls">
+                <select id="timer-select" class="timer-select">
+                    <option value="30">Easy (30s)</option>
+                    <option value="15" selected>Medium (15s)</option>
+                    <option value="10">Hard (10s)</option>
+                    <option value="0">Practice (No timer)</option>
+                </select>
+            </div>
         </div>
-      </div>
     </nav>
 
     <!-- Auth Pages -->
     <div id="auth-container" class="auth-container">
-      <!-- Login Page -->
-      <div id="login-page" class="auth-page active">
-        <div class="login-box">
-          <form id="login-form">
-            <h2>Login</h2>
-            <div class="input-box">
-              <input type="text" id="login-username" required />
-              <label>Username</label>
+        <!-- Login Page -->
+        <div id="login-page" class="auth-page active">
+            <div class="login-box">
+                <form id="login-form">
+                    <h2>Login</h2>
+                    <div class="input-box">
+                        <input type="text" id="login-username" required />
+                        <label>Username</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" id="login-password" required />
+                        <label>Password</label>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <div class="signup-link">
+                        <a href="#" id="to-signup-from-login">Create Account</a>
+                    </div>
+                    <p class="auth-toggle">
+                        <a href="#" id="to-admin-from-login">Admin Login</a>
+                    </p>
+                </form>
             </div>
-            <div class="input-box">
-              <input type="password" id="login-password" required />
-              <label>Password</label>
-            </div>
-            <div class="forgot-password">
-              <a href="#">Forgot your password ?</a>
-            </div>
-            <button type="submit" class="btn">Login</button>
-            <div class="signup-link">
-              <a href="#" id="to-signup-from-login">Signup</a>
-            </div>
-            <p class="auth-toggle" style="margin-top: 10px">
-              <a href="#" id="to-admin-from-login">Admin Login</a>
-            </p>
-          </form>
         </div>
-      </div>
 
-      <!-- Signup Page -->
-      <div id="signup-page" class="auth-page">
-        <div class="login-box">
-          <form id="signup-form">
-            <h2>Sign Up</h2>
-            <div class="input-box">
-              <input type="text" id="signup-username" required />
-              <label>Username</label>
+        <!-- Signup Page -->
+        <div id="signup-page" class="auth-page">
+            <div class="login-box">
+                <form id="signup-form">
+                    <h2>Sign Up</h2>
+                    <div class="input-box">
+                        <input type="text" id="signup-username" required />
+                        <label>Username</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="email" id="signup-email" required />
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" id="signup-password" required />
+                        <label>Password</label>
+                    </div>
+                    <button type="submit" class="btn">Sign Up</button>
+                    <div class="signup-link">
+                        <a href="#" id="to-login-from-signup">Back to Login</a>
+                    </div>
+                </form>
             </div>
-            <div class="input-box">
-              <input type="email" id="signup-email" required />
-              <label>Email</label>
-            </div>
-            <div class="input-box">
-              <input type="password" id="signup-password" required />
-              <label>Password</label>
-            </div>
-            <button type="submit" class="btn">Sign Up</button>
-            <div class="signup-link">
-              <a href="#" id="to-login-from-signup">Login</a>
-            </div>
-          </form>
         </div>
-      </div>
 
-      <!-- Admin Login Page (Secret) -->
-      <div id="admin-login-page" class="auth-page">
-        <div class="auth-box">
-          <h1>Admin Access</h1>
-          <p class="auth-subtitle">Administrative Panel</p>
-          <form id="admin-login-form">
-            <div class="form-group">
-              <label for="admin-username">Username</label>
-              <input
-                type="text"
-                id="admin-username"
-                placeholder="Admin username"
-                required
-              />
+        <!-- Admin Login Page -->
+        <div id="admin-login-page" class="auth-page">
+            <div class="auth-box">
+                <h1>Admin Access</h1>
+                <p class="auth-subtitle">Administrative Panel</p>
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-username">Username</label>
+                        <input type="text" id="admin-username" placeholder="Admin username" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" placeholder="Admin password" required />
+                    </div>
+                    <button type="submit" class="auth-btn">Login as Admin</button>
+                </form>
+                <p class="auth-toggle">
+                    <a href="#" id="back-to-login">Back to Login</a>
+                </p>
             </div>
-            <div class="form-group">
-              <label for="admin-password">Password</label>
-              <input
-                type="password"
-                id="admin-password"
-                placeholder="Admin password"
-                required
-              />
-            </div>
-            <button type="submit" class="auth-btn">Login as Admin</button>
-          </form>
-          <p class="auth-toggle">
-            <a href="#" id="back-to-login">Back to Login</a>
-          </p>
         </div>
-      </div>
     </div>
 
-    <!-- Admin Dashboard (Hidden by default) -->
+    <!-- Admin Dashboard -->
     <div id="admin-container" class="admin-container" style="display: none">
-      <div class="admin-header">
-        <h1>Admin Dashboard</h1>
-        <button id="admin-logout-btn" class="logout-btn">Logout</button>
-      </div>
-      <div class="admin-content">
-        <div class="users-section">
-          <h2>Registered Users</h2>
-          <div id="users-list" class="users-list"></div>
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <button id="admin-logout-btn" class="logout-btn">Logout</button>
         </div>
-        <div class="user-details-section">
-          <h2>User Details & Answers</h2>
-          <div id="user-details" class="user-details"></div>
+        <div class="admin-content">
+            <div class="users-section">
+                <h2>Registered Users</h2>
+                <div id="users-list" class="users-list"></div>
+            </div>
+            <div class="user-details-section">
+                <h2>User Details & Answers</h2>
+                <div id="user-details" class="user-details"></div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Profile Modal (Hidden by default) -->
+    <!-- Profile Modal -->
     <div id="profile-modal" class="profile-modal" style="display: none">
-      <div class="profile-content">
-        <div class="profile-header">
-          <h2>Profile</h2>
-          <button id="profile-close-btn" class="profile-close-btn">
-            &times;
-          </button>
+        <div class="profile-content">
+            <div class="profile-header">
+                <h2>Profile</h2>
+                <button id="profile-close-btn" class="profile-close-btn">&times;</button>
+            </div>
+            <div class="profile-body">
+                <div class="profile-picture-section">
+                    <img id="profile-img" src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-picture" />
+                    <input type="file" id="profile-picture-input" class="profile-picture-input" accept="image/*" style="display: none" />
+                    <button type="button" id="upload-profile-btn" class="upload-profile-btn">
+                        <ion-icon name="camera"></ion-icon> Change Picture
+                    </button>
+                </div>
+                <div class="profile-details">
+                    <div class="profile-field">
+                        <label>Username</label>
+                        <p id="profile-username" class="profile-value">-</p>
+                    </div>
+                    <div class="profile-field">
+                        <label>Email</label>
+                        <p id="profile-email" class="profile-value">-</p>
+                    </div>
+                    <div class="profile-field">
+                        <label>Member Since</label>
+                        <p id="profile-joined" class="profile-value">-</p>
+                    </div>
+                    <div class="profile-field">
+                        <label>Achievements</label>
+                        <p id="profile-achievements" class="profile-value">0</p>
+                    </div>
+                    <div class="profile-field">
+                        <label>Current Streak</label>
+                        <p id="profile-streak" class="profile-value">0 days</p>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-footer">
+                <button id="profile-logout-btn" class="logout-btn">
+                    <ion-icon name="log-out"></ion-icon> Logout
+                </button>
+            </div>
         </div>
-
-        <div class="profile-body">
-          <div class="profile-picture-section">
-            <img
-              id="profile-img"
-              src="https://via.placeholder.com/120"
-              alt="Profile Picture"
-              class="profile-picture"
-            />
-            <input
-              type="file"
-              id="profile-picture-input"
-              class="profile-picture-input"
-              accept="image/*"
-              style="display: none"
-            />
-            <button
-              type="button"
-              id="upload-profile-btn"
-              class="upload-profile-btn"
-            >
-              <ion-icon name="camera"></ion-icon> Change Picture
-            </button>
-          </div>
-
-          <div class="profile-details">
-            <div class="profile-field">
-              <label>Name</label>
-              <p id="profile-name" class="profile-value">-</p>
-            </div>
-            <div class="profile-field">
-              <label>Email</label>
-              <p id="profile-email" class="profile-value">-</p>
-            </div>
-            <div class="profile-field">
-              <label>Username</label>
-              <p id="profile-username" class="profile-value">-</p>
-            </div>
-            <div class="profile-field">
-              <label>Quizzes Attempted</label>
-              <p id="profile-quizzes" class="profile-value">0</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-footer">
-          <button id="profile-logout-btn" class="logout-btn">
-            <ion-icon name="log-out"></ion-icon> Logout
-          </button>
-        </div>
-      </div>
     </div>
 
-    <!-- Settings Modal (Hidden by default) -->
+    <!-- Settings Modal -->
     <div id="settings-modal" class="settings-modal" style="display: none">
-      <div class="settings-content">
-        <div class="settings-header">
-          <h2>Settings</h2>
-          <button id="settings-close-btn" class="settings-close-btn">
-            &times;
-          </button>
-        </div>
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button id="settings-close-btn" class="settings-close-btn">&times;</button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-group">
+                    <h3 class="settings-group-title">Theme</h3>
+                    <div class="settings-item">
+                        <span class="settings-label">Dark Mode</span>
+                        <label class="theme-radio">
+                            <input type="radio" name="theme" value="dark" id="theme-dark" />
+                            <span class="theme-option-label"><ion-icon name="moon"></ion-icon></span>
+                        </label>
+                        <label class="theme-radio">
+                            <input type="radio" name="theme" value="light" id="theme-light" />
+                            <span class="theme-option-label"><ion-icon name="sunny"></ion-icon></span>
+                        </label>
+                        <label class="theme-radio">
+                            <input type="radio" name="theme" value="app" id="theme-app" checked />
+                            <span class="theme-option-label"><ion-icon name="color-palette"></ion-icon></span>
+                        </label>
+                    </div>
+                </div>
 
-        <div class="settings-body">
-          <div class="settings-group">
-            <h3 class="settings-group-title">Theme</h3>
-            <div class="settings-item">
-              <div class="settings-item-label">
-                <span class="settings-label-text">Dark Mode</span>
-                <span class="settings-description">Dark theme</span>
-              </div>
-              <label class="theme-radio">
-                <input type="radio" name="theme" value="dark" id="theme-dark" />
-                <span class="theme-option-label">
-                  <ion-icon name="moon"></ion-icon> Dark
-                </span>
-              </label>
-            </div>
-            <div class="settings-item">
-              <div class="settings-item-label">
-                <span class="settings-label-text">Light Mode</span>
-                <span class="settings-description">Light theme</span>
-              </div>
-              <label class="theme-radio">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="light"
-                  id="theme-light"
-                />
-                <span class="theme-option-label">
-                  <ion-icon name="sunny"></ion-icon> Light
-                </span>
-              </label>
-            </div>
-            <div class="settings-item">
-              <div class="settings-item-label">
-                <span class="settings-label-text">App Theme</span>
-                <span class="settings-description">Application theme</span>
-              </div>
-              <label class="theme-radio">
-                <input type="radio" name="theme" value="app" id="theme-app" />
-                <span class="theme-option-label">
-                  <ion-icon name="color-palette"></ion-icon> App
-                </span>
-              </label>
-            </div>
-          </div>
+                <div class="settings-group">
+                    <h3 class="settings-group-title">Sound</h3>
+                    <div class="settings-item">
+                        <span class="settings-label">Sound Effects</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sound-toggle" checked />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-label">Speech (Question Audio)</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="speech-toggle" checked />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
-          <div class="settings-group">
-            <h3 class="settings-group-title">Preferences</h3>
-            <div class="settings-item">
-              <div class="settings-item-label">
-                <span class="settings-label-text">Speech</span>
-                <span class="settings-description"
-                  >Enable/Disable question audio</span
-                >
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="speech-toggle" checked />
-                <span class="toggle-slider"></span>
-              </label>
+                <div class="settings-group">
+                    <h3 class="settings-group-title">Default Timer</h3>
+                    <div class="settings-item">
+                        <select id="default-timer" class="settings-select">
+                            <option value="30">Easy (30 seconds)</option>
+                            <option value="15" selected>Medium (15 seconds)</option>
+                            <option value="10">Hard (10 seconds)</option>
+                            <option value="0">Practice (No timer)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="settings-footer">
+                <button id="settings-logout-btn" class="logout-btn">Logout</button>
+            </div>
         </div>
-
-        <div class="settings-footer">
-          <button id="settings-logout-btn" class="logout-btn">Logout</button>
-        </div>
-      </div>
     </div>
 
-    <!-- Cancel Quiz Modal (Hidden by default) -->
+    <!-- Achievements Modal -->
+    <div id="achievements-modal" class="achievements-modal" style="display: none">
+        <div class="achievements-content">
+            <div class="achievements-header">
+                <h2>Achievements</h2>
+                <button id="achievements-close-btn" class="achievements-close-btn">&times;</button>
+            </div>
+            <div class="achievements-body" id="achievements-list">
+                <!-- Achievements will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="leaderboard-modal" style="display: none">
+        <div class="leaderboard-content">
+            <div class="leaderboard-header">
+                <h2>Leaderboard</h2>
+                <button id="leaderboard-close-btn" class="leaderboard-close-btn">&times;</button>
+            </div>
+            <div class="leaderboard-tabs">
+                <button class="leaderboard-tab active" data-tab="global">Global</button>
+                <button class="leaderboard-tab" data-tab="weekly">Weekly</button>
+                <button class="leaderboard-tab" data-tab="friends">Friends</button>
+            </div>
+            <div class="leaderboard-body" id="leaderboard-list">
+                <!-- Leaderboard will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Challenge Modal -->
+    <div id="daily-modal" class="daily-modal" style="display: none">
+        <div class="daily-content">
+            <div class="daily-header">
+                <h2>Daily Challenge</h2>
+                <button id="daily-close-btn" class="daily-close-btn">&times;</button>
+            </div>
+            <div class="daily-body" id="daily-body">
+                <!-- Daily challenge will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Quiz Modal -->
     <div id="cancel-quiz-modal" class="cancel-quiz-modal" style="display: none">
-      <div class="cancel-quiz-content">
-        <div class="cancel-quiz-header">
-          <h2>Cancel Quiz</h2>
+        <div class="cancel-quiz-content">
+            <div class="cancel-quiz-header">
+                <h2>Cancel Quiz</h2>
+            </div>
+            <div class="cancel-quiz-body">
+                <p>Are you sure you want to cancel? Your progress won't be saved.</p>
+            </div>
+            <div class="cancel-quiz-footer">
+                <button id="cancel-quiz-yes" class="cancel-yes-btn">Yes</button>
+                <button id="cancel-quiz-no" class="cancel-no-btn">No</button>
+            </div>
         </div>
-        <div class="cancel-quiz-body">
-          <p>
-            Are you sure you want to cancel the quiz? This will affect your
-            progress.
-          </p>
-        </div>
-        <div class="cancel-quiz-footer">
-          <button id="cancel-quiz-yes" class="cancel-yes-btn">Yes</button>
-          <button id="cancel-quiz-no" class="cancel-no-btn">No</button>
-        </div>
-      </div>
     </div>
 
-    <!-- Celebration Modal (Hidden by default) -->
-    <div id="celebration-modal" class="celebration-modal" style="display: none">
-      <div class="celebration-content">
-        <div class="celebration-message">
-          <h1>🎉 HURRAY! 🎉</h1>
-          <p id="celebration-text">You are a guru!</p>
-          <p class="celebration-subtitle" id="celebration-topic"></p>
+<!-- Celebration Modal -->
+<div id="celebration-modal" class="celebration-modal" style="display: none">
+    <div class="celebration-content">
+        <div class="celebration-header">
+            <h2>Congratulations! 🎉</h2>
+            <button id="celebration-close-btn" class="celebration-close-btn">&times;</button>
+        </div>
+        <div class="celebration-body">
+            <div class="celebration-message">
+                <h1>🎉 HURRAY! 🎉</h1>
+                <p id="celebration-text">Perfect Score!</p>
+                <p class="celebration-subtitle" id="celebration-topic"></p>
+                
+                <!-- WhatsApp Share Buttons -->
+                <div class="whatsapp-share-buttons">
+                    <button class="whatsapp-btn" id="share-whatsapp">
+                        <ion-icon name="logo-whatsapp"></ion-icon> Share to Chat
+                    </button>
+                    <button class="whatsapp-btn whatsapp-status-btn" id="share-status">
+                        <ion-icon name="logo-whatsapp"></ion-icon> Share to Status
+                    </button>
+                </div>
+                
+                <!-- Other share buttons -->
+                <div class="share-buttons">
+                    <button class="share-btn" id="share-twitter"><ion-icon name="logo-twitter"></ion-icon></button>
+                    <button class="share-btn" id="share-copy"><ion-icon name="copy-outline"></ion-icon></button>
+                </div>
+            </div>
+        </div>
+        <div class="celebration-footer">
+            <button id="celebration-cancel-btn" class="celebration-cancel-btn">Close</button>
         </div>
         <div class="fireworks-container" id="fireworks-container"></div>
-      </div>
+    </div>
+</div>
+
+    <!-- Quiz Dashboard -->
+    <div id="dashboard-container" class="dashboard-container" style="display: none">
+        <div class="dashboard-header">
+            <h1 id="dashboard-welcome">Welcome!</h1>
+            <p class="dashboard-subtitle">Choose your quiz</p>
+        </div>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
+                <div class="stat-info">
+                    <div class="stat-label">Quizzes Done</div>
+                    <div class="stat-value" id="stat-quizzes">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><ion-icon name="flame"></ion-icon></div>
+                <div class="stat-info">
+                    <div class="stat-label">Current Streak</div>
+                    <div class="stat-value" id="stat-streak">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><ion-icon name="medal"></ion-icon></div>
+                <div class="stat-info">
+                    <div class="stat-label">Achievements</div>
+                    <div class="stat-value" id="stat-achievements">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-filters">
+            <button class="category-filter active" data-category="all">All</button>
+            <button class="category-filter" data-category="relationships">💕 Relationships</button>
+            <button class="category-filter" data-category="sports">⚽ Sports</button>
+            <button class="category-filter" data-category="economy">📊 Economy</button>
+            <button class="category-filter" data-category="education">📚 Education</button>
+            <button class="category-filter" data-category="technology">🤖 Technology</button>
+            <button class="category-filter" data-category="geography">🌍 Geography</button>
+        </div>
+
+        <div class="dashboard-content">
+            <div id="quiz-topics-list" class="quiz-topics-list"></div>
+        </div>
     </div>
 
-    <!-- Quiz Selection Dashboard (Hidden by default) -->
-    <div
-      id="dashboard-container"
-      class="dashboard-container"
-      style="display: none"
-    >
-      <div class="dashboard-header">
-        <h1 id="dashboard-welcome">Welcome!</h1>
-        <p class="dashboard-subtitle">Choose your quiz type</p>
-      </div>
-
-      <div class="dashboard-stats">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <ion-icon name="checkmark-circle"></ion-icon>
-          </div>
-          <div class="stat-info">
-            <div class="stat-label">Quizzes Attempted</div>
-            <div class="stat-value" id="stat-quizzes">0</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <ion-icon name="pie-chart"></ion-icon>
-          </div>
-          <div class="stat-info">
-            <div class="stat-label">Overall Progress</div>
-            <div class="stat-value" id="stat-progress">0%</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dashboard-content">
-        <div id="quiz-topics-list" class="quiz-topics-list"></div>
-      </div>
-    </div>
-
-    <!-- Quiz Container (Hidden by default) -->
+    <!-- Quiz Container -->
     <div id="quiz-container" class="quiz-container" style="display: none">
-      <div class="quiz-top-bar">
-        <div class="user-info" id="user-info"></div>
-        <div class="quiz-top-buttons">
-          <button
-            id="cancel-quiz-btn"
-            class="cancel-quiz-btn"
-            title="Cancel Quiz"
-          >
-            <ion-icon name="close"></ion-icon>
-          </button>
-          <button id="settings-btn" class="settings-btn" title="Settings">
-            <ion-icon name="settings-outline"></ion-icon>
-          </button>
+        <div class="quiz-top-bar">
+            <div class="user-info" id="user-info"></div>
+            <div class="quiz-top-buttons">
+                <button id="home-btn" class="home-btn" title="Go to Dashboard">
+                    <ion-icon name="home"></ion-icon>
+                </button>
+                <button id="cancel-quiz-btn" class="cancel-quiz-btn" title="Cancel Quiz">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+                <button id="settings-btn" class="settings-btn" title="Settings">
+                    <ion-icon name="settings-outline"></ion-icon>
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="quiz-header">
-        <div class="timer">Time Left: <span id="time">15</span>s</div>
-        <div class="streak">🔥 Streak: <span id="streak-count">0</span></div>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
-
-      <div class="question-number" id="question-number"></div>
-      <div class="question">Question will appear here</div>
-
-      <div class="options"></div>
-
-      <div class="feedback" id="feedback" aria-live="polite"></div>
-      <div class="explanation" id="explanation"></div>
-
-      <div class="result">
-        <div class="score-title">Results</div>
-        <div class="score-grid" aria-live="polite">
-          <div class="score-card">
-            <div class="score-label">Correct</div>
-            <div class="score-value">
-              <span id="score">0</span>
-              <span class="score-unit">/ <span id="total">0</span></span>
-            </div>
-          </div>
-
-          <div class="score-card">
-            <div class="score-label">Percentage</div>
-            <div class="score-value">
-              <span id="percent">0</span><span class="score-unit">%</span>
-            </div>
-          </div>
+        
+        <div class="quiz-header">
+            <div class="difficulty-badge" id="difficulty-badge">Medium</div>
+            <div class="timer" id="timer-display">Time Left: <span id="time">15</span>s</div>
+            <div class="streak">🔥 Streak: <span id="streak-count">0</span></div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
         </div>
 
-        <div class="score-summary" id="summary"></div>
-        <div class="review" id="review"></div>
-      </div>
+        <div class="question-number" id="question-number"></div>
+        <div class="question" id="question">Question will appear here</div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback"></div>
 
-      <div class="controls">
-        <button class="previous-btn">Previous</button>
-        <button class="next-btn">Next</button>
-        <button class="restart-btn">Restart Quiz</button>
-      </div>
+        <div class="result" id="result">
+            <div class="score-title">Results</div>
+            <div class="score-grid">
+                <div class="score-card">
+                    <div class="score-label">Correct</div>
+                    <div class="score-value"><span id="score">0</span>/<span id="total">0</span></div>
+                </div>
+                <div class="score-card">
+                    <div class="score-label">Percentage</div>
+                    <div class="score-value"><span id="percent">0</span>%</div>
+                </div>
+            </div>
+            <div class="score-summary" id="summary"></div>
+            
+            <!-- Back to Dashboard Button -->
+            <div class="result-buttons">
+                <button id="back-home-btn" class="back-home-btn">
+                    <ion-icon name="home"></ion-icon> Back to Dashboard
+                </button>
+            </div>
+            
+            <div class="review" id="review"></div>
+        </div>
+
+        <div class="controls">
+            <button class="previous-btn" id="prev-btn">Previous</button>
+            <button class="next-btn" id="next-btn">Next</button>
+            <button class="restart-btn" id="restart-btn">Restart Quiz</button>
+        </div>
     </div>
-  </body>
+
+    <!-- Audio elements for sound effects -->
+    <audio id="correct-sound" src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD//+8kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"></audio>
+    <audio id="wrong-sound" src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD//+8kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"></audio>
+    <audio id="celebration-sound" src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD//+8kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"></audio>
+</body>
 </html>
